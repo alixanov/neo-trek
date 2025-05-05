@@ -1,95 +1,42 @@
-import React, { useState, useLayoutEffect, useMemo, memo, useRef } from 'react';
-import { Search, X } from 'lucide-react';
+import React, { useState, useLayoutEffect, useMemo, useEffect, useRef } from 'react';
+import { Search, X, User, Calendar, ArrowLeft, Twitter } from 'lucide-react';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
-
-const users = [
-  { username: '@RapidResponse47', displayName: 'Rapid Response', followers: 1200, bio: 'Быстрые новости и реакции' },
-  { username: '@nypost', displayName: 'New York Post', followers: 500000, bio: 'Новости Нью-Йорка и не только' },
-  { username: '@Independent', displayName: 'The Independent', followers: 300000, bio: 'Независимая журналистика' },
-  { username: '@mailOnline', displayName: 'Daily Mail', followers: 400000, bio: 'Глобальные новости каждый день' },
-  { username: '@elonmusk', displayName: 'Elon Musk', followers: 10000000, bio: 'Инноватор и мечтатель' },
-  { username: '@lessin', displayName: 'Jessica Lessin', followers: 25000, bio: 'Технологии и медиа' },
-  { username: '@euwyn', displayName: 'Euwyn Poon', followers: 1500, bio: 'Стартапы и код' },
-  { username: '@Polymarket', displayName: 'Polymarket', followers: 8000, bio: 'Прогнозы и рынки' },
-  { username: '@euris_JT', displayName: 'Euris JT', followers: 300, bio: 'Искры творчества' },
-  { username: '@MarioNawfal', displayName: 'Mario Nawfal', followers: 50000, bio: 'Предприниматель и аналитик' },
-  { username: '@RT_com', displayName: 'RT News', followers: 200000, bio: 'Мировые новости' },
-  { username: '@LucaNetz', displayName: 'Luca Netz', followers: 7000, bio: 'NFT и блокчейн' },
-  { username: '@0xRamonos', displayName: 'Ramonos', followers: 400, bio: 'Криптоэнтузиаст' },
-  { username: '@nima_owji', displayName: 'Nima Owji', followers: 600, bio: 'Технологии и дизайн' },
-  { username: '@2mistekevin_rs', displayName: 'Kevin RS', followers: 200, bio: 'Игры и код' },
-  { username: '@100xgemfinder', displayName: 'Gem Finder', followers: 1000, bio: 'Криптосокровища' },
-  { username: '@_shadow36', displayName: 'Shadow', followers: 300, bio: 'Таинственный наблюдатель' },
-  { username: '@FunnyJMoney', displayName: 'Funny Money', followers: 5000, bio: 'Мемы и финансы' },
-  { username: '@BurwickLaw', displayName: 'Burwick Law', followers: 800, bio: 'Юридические инсайты' },
-  { username: '@ABC', displayName: 'ABC News', followers: 600000, bio: 'Надёжные новости' },
-  { username: '@PaulSkallas', displayName: 'Paul Skallas', followers: 12000, bio: 'Культура и идеи' },
-  { username: '@wallstreetbets', displayName: 'Wall Street Bets', followers: 150000, bio: 'Финансовый бунт' },
-  { username: '@realdonuldtrump', displayName: 'Donald Trump', followers: 2000000, bio: 'Политика и лидерство' },
-  { username: '@peta', displayName: 'PETA', followers: 100000, bio: 'За права животных' },
-  { username: '@DegenerateNews', displayName: 'Degenerate News', followers: 4000, bio: 'Дикие новости' },
-  { username: '@pain', displayName: 'Pain', followers: 200, bio: 'Искры эмоций' },
-  { username: '@astridhpilla', displayName: 'Astrid Pilla', followers: 300, bio: 'Искусство и жизнь' },
-  { username: '@nfl', displayName: 'NFL', followers: 500000, bio: 'Футбол и страсть' },
-  { username: '@marklevinshow', displayName: 'Mark Levin', followers: 60000, bio: 'Политические дебаты' },
-  { username: '@ecca', displayName: 'Ecca', followers: 100, bio: 'Музыка и вайб' },
-  { username: '@crypto_banter', displayName: 'Crypto Banter', followers: 20000, bio: 'Крипто и трейдинг' },
-  { username: '@amuse', displayName: 'Amuse', followers: 500, bio: 'Развлечения и юмор' },
-  { username: '@doge', displayName: 'Doge Army', followers: 30000, bio: 'Мемы и крипто' },
-  { username: '@ChartfuMonkey', displayName: 'Chartfu Monkey', followers: 7000, bio: 'Графики и аналитика' },
-  { username: '@crashiusClay69', displayName: 'Crashius Clay', followers: 400, bio: 'Хаос и веселье' },
-  { username: '@PeterSchiff', displayName: 'Peter Schiff', followers: 80000, bio: 'Экономика и золото' },
-  { username: '@mrpunkdoteth', displayName: 'Mr Punk', followers: 2000, bio: 'NFT и панк' },
-  { username: '@alx', displayName: 'ALX', followers: 15000, bio: 'Технологии и свобода' },
-  { username: '@dgabeau', displayName: 'Dgabeau', followers: 300, bio: 'Искры гениальности' },
-  { username: '@Easyeatsbodega', displayName: 'Easy Eats', followers: 600, bio: 'Еда и стиль' },
-  { username: '@boloudon', displayName: 'Bo Loudon', followers: 4000, bio: 'Молодёжный вайб' },
-  { username: '@ansem', displayName: 'Ansem', followers: 1000, bio: 'Крипто и философия' },
-  { username: '@ye', displayName: 'Ye', followers: 5000000, bio: 'Музыка и инновации' },
-  { username: '@ryanafournier', displayName: 'Ryan Fournier', followers: 20000, bio: 'Политика и молодёжь' },
-  { username: '@markjeffrey', displayName: 'Mark Jeffrey', followers: 5000, bio: 'Технологии и книги' },
-  { username: '@0xash1', displayName: 'Ash1', followers: 200, bio: 'Код и крипто' },
-  { username: '@marionawfal', displayName: 'Mario Nawfal', followers: 50000, bio: 'Бизнес и аналитика' },
-  { username: '@Forbes', displayName: 'Forbes', followers: 700000, bio: 'Бизнес и успех' },
-  { username: '@WSJ', displayName: 'Wall Street Journal', followers: 600000, bio: 'Финансы и новости' },
-  { username: '@SenLummis', displayName: 'Cynthia Lummis', followers: 25000, bio: 'Политика и крипто' },
-  { username: '@FA_touadera', displayName: 'Faustin Touadera', followers: 3000, bio: 'Лидерство и прогресс' },
-  { username: '@NewsWire_US', displayName: 'NewsWire US', followers: 10000, bio: 'Новости США' },
-  { username: '@krakensupport', displayName: 'Kraken Support', followers: 5000, bio: 'Криптобиржа' },
-  { username: '@moonshot', displayName: 'Moonshot', followers: 2000, bio: 'Инновации и мечты' },
-  { username: '@farhajmayan', displayName: 'Farhaj Mayan', followers: 400, bio: 'Технологии и стартапы' },
-  { username: '@Watcher.Guru', displayName: 'Watcher Guru', followers: 15000, bio: 'Крипто и тренды' },
-  { username: '@okx', displayName: 'OKX', followers: 20000, bio: 'Криптобиржа' },
-  { username: '@cz', displayName: 'CZ', followers: 100000, bio: 'Крипто и бизнес' },
-  { username: '@binance', displayName: 'Binance', followers: 300000, bio: 'Ведущая криптобиржа' },
-  { username: '@oreo', displayName: 'Oreo', followers: 40000, bio: 'Вкус и веселье' },
-  { username: '@VitalikButerin', displayName: 'Vitalik Buterin', followers: 200000, bio: 'Эфириум и будущее' },
-  { username: '@aeyakovenko', displayName: 'Anatoly Yakovenko', followers: 25000, bio: 'Solana и блокчейн' },
-  { username: '@LiberLand_org', displayName: 'Liberland', followers: 5000, bio: 'Свобода и утопия' },
-  { username: '@TheinsiderPaper', displayName: 'Insider Paper', followers: 10000, bio: 'Инсайдерские новости' },
-  { username: '@Cointehelgraph', displayName: 'Cointelegraph', followers: 80000, bio: 'Крипто и технологии' },
-  { username: '@AutismCapital', displayName: 'Autism Capital', followers: 6000, bio: 'Крипто и аналитика' },
-  { username: '@WhaleInsider', displayName: 'Whale Insider', followers: 4000, bio: 'Криптокиты и тренды' }
-];
+import users from '../data/user';
+import XIcon from '@mui/icons-material/X';
 
 const TrekerContainer = styled.div`
   min-height: 100vh;
   padding: 3rem 1rem;
-  background: #12151f;
+  background: linear-gradient(135deg, #1e1b4b, #4c1d95);
   color: #ffffff;
   font-family: 'Montserrat', sans-serif;
+  position: relative;
+  overflow: hidden;
   @media (min-width: 640px) {
     padding: 3rem 1.5rem;
   }
   @media (min-width: 1024px) {
     padding: 3rem 2rem;
   }
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E") center center;
+    opacity: 0.15;
+    pointer-events: none;
+  }
 `;
 
 const ContentWrapper = styled.div`
   max-width: 64rem;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 `;
 
 const Header = styled.h1`
@@ -97,7 +44,7 @@ const Header = styled.h1`
   font-weight: 800;
   text-align: center;
   margin-bottom: 2rem;
-  background: linear-gradient(45deg, #8b5cf6, #ec4899);
+  background: linear-gradient(45deg, #8b5cf6,rgb(255, 0, 128));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-transform: uppercase;
@@ -113,11 +60,14 @@ const Header = styled.h1`
 const SearchWrapper = styled.div`
   position: relative;
   margin-bottom: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `;
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 1rem 3rem 1rem 3rem;
+  padding: 1rem 4rem 1rem 3rem;
   border-radius: 2rem;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -126,6 +76,7 @@ const SearchInput = styled.input`
   font-weight: 400;
   outline: none;
   transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
   &:focus {
     border-color: #ec4899;
     box-shadow: 0 0 8px rgba(236, 72, 153, 0.4);
@@ -137,7 +88,7 @@ const SearchInput = styled.input`
 
 const ClearButton = styled.button`
   position: absolute;
-  right: 1rem;
+  right: 2.5rem;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -150,10 +101,27 @@ const ClearButton = styled.button`
   }
 `;
 
+const TwitterLink = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #94a3b8;
+  transition: all 0.3s ease;
+  &:hover {
+    color: #facc15;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+  }
+`;
+
 const UserGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.5rem;
+  gap: 2rem;
   @media (min-width: 640px) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -163,119 +131,412 @@ const UserGrid = styled.div`
 `;
 
 const UserCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 1rem;
-  padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  position: relative;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
   cursor: pointer;
-  &.expanded {
-    padding-bottom: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  &:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3), 0 0 20px rgba(236, 72, 153, 0.2);
+    border-color: #ec4899;
   }
-  &:hover:not(.expanded) {
-    transform: translateY(-4px);
-    border-color: #8b5cf6;
-    box-shadow: 0 6px 12px rgba(139, 92, 246, 0.2);
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.2), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  &:hover:before {
+    opacity: 1;
   }
 `;
 
 const UserContent = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
   gap: 1rem;
 `;
 
-const Avatar = styled.div`
-  width: 2.25rem;
-  height: 2.25rem;
+const AvatarWrapper = styled.div`
+  position: relative;
+  width: 4.5rem;
+  height: 4.5rem;
+  transition: transform 0.3s ease;
+  ${UserCard}:hover & {
+    transform: scale(1.1);
+  }
+`;
+
+const Avatar = styled.img`
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid transparent;
   background: linear-gradient(45deg, #8b5cf6, #ec4899);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 1rem;
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
 `;
 
 const UserInfo = styled.div`
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `;
 
-const Username = styled.span`
+const Username = styled.h3`
   color: #ffffff;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0;
+  transition: color 0.3s ease;
+  ${UserCard}:hover & {
+    color: #facc15;
+  }
 `;
 
-const DisplayName = styled.span`
+const DisplayName = styled.p`
   color: #d1d5db;
-  font-size: 0.85rem;
-`;
-
-const ExpandedContent = styled.div`
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: #d1d5db;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  margin: 0;
 `;
 
 const Bio = styled.p`
-  margin: 0 0 0.5rem;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.4;
+  max-height: 2.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 const Followers = styled.p`
+  color: #ec4899;
+  font-size: 0.9rem;
+  font-weight: 500;
   margin: 0;
-  color: #facc15;
 `;
 
-const UserCardComponent = memo(({ user }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const cardRef = useRef(null);
+const CreatedAt = styled.p`
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin: 0;
+`;
 
-  const handleClick = () => {
-    setIsExpanded(!isExpanded);
-  };
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+`;
 
-  useLayoutEffect(() => {
-    if (cardRef.current) {
-      gsap.to(cardRef.current, {
-        height: 'auto',
-        duration: 0.3,
-        ease: 'power3.out'
-      });
-    }
-  }, [isExpanded]);
+const ModalContent = styled.div`
+  width: 90%;
+  max-width: 30rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #1e2235, #121420);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.2);
+  padding: 0;
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  .active & {
+    transform: scale(1);
+  }
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.5);
+    border-radius: 4px;
+  }
+`;
 
-  return (
-    <UserCard
-      ref={cardRef}
-      className={`user-card ${isExpanded ? 'expanded' : ''}`}
-      onClick={handleClick}
-    >
-      <UserContent>
-        <Avatar>{user.username[1].toUpperCase()}</Avatar>
-        <UserInfo>
-          <Username>{user.username}</Username>
-          <DisplayName>{user.displayName}</DisplayName>
-        </UserInfo>
-      </UserContent>
-      {isExpanded && (
-        <ExpandedContent>
-          <Bio>{user.bio}</Bio>
-          <Followers>{user.followers.toLocaleString()} подписчиков</Followers>
-        </ExpandedContent>
-      )}
-    </UserCard>
-  );
-});
+const ModalHeader = styled.div`
+  position: relative;
+  height: 10rem;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  border-radius: 1.5rem 1.5rem 0 0;
+  overflow: hidden;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E") center center;
+    opacity: 0.3;
+  }
+`;
+
+const BackButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: #ffffff;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  &:hover {
+    background: rgba(0, 0, 0, 0.5);
+    transform: scale(1.1);
+  }
+`;
+
+const ProfileAvatar = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7rem;
+  height: 7rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #12151f;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+`;
+
+const ProfileAvatarImg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const ProfileContent = styled.div`
+  padding: 4rem 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const ProfileName = styled.div`
+  text-align: center;
+`;
+
+const ProfileDisplayName = styled.h2`
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+`;
+
+const ProfileUsername = styled.p`
+  color: #ec4899;
+  font-size: 1rem;
+  margin: 0;
+`;
+
+const ProfileFollowers = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #facc15;
+  font-weight: 600;
+`;
+
+const ProfileBio = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1.25rem;
+`;
+
+const ProfileBioTitle = styled.h3`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  margin: 0 0 0.75rem;
+`;
+
+const ProfileBioText = styled.p`
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+`;
+
+const ProfileDate = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+const ProfileDateIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8b5cf6;
+`;
+
+const ProfileDateText = styled.p`
+  color: #d1d5db;
+  font-size: 0.9rem;
+  margin: 0;
+`;
+
+const formatDate = (dateString) => {
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date)) throw new Error('Invalid date');
+    return date.toLocaleDateString('ru-RU', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  } catch {
+    return 'Неизвестно';
+  }
+};
 
 const Treker = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const headerRef = useRef(null);
   const gridRef = useRef(null);
+  const modalRef = useRef(null);
+  const containerRef = useRef(null);
+
+  // Gradient backgrounds for scroll effect
+  const gradients = [
+    'linear-gradient(135deg, #1e1b4b,rgb(87, 29, 149))', // Matches initial background
+    'linear-gradient(135deg, #2a2a72,rgb(47, 23, 82))', // Navy to cyan
+    'linear-gradient(135deg,rgb(27, 24, 73),rgb(106, 25, 80))', // Matches initial background
+  ];
+
+  // Set initial background immediately on mount
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      gsap.set(containerRef.current, {
+        background: gradients[0],
+      });
+    }
+  }, []);
+
+  // Handle background gradient change on scroll
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const updateBackground = () => {
+      const scrollY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollFraction = docHeight > 0 ? scrollY / docHeight : 0;
+      const index = Math.min(
+        Math.floor(scrollFraction * (gradients.length - 1)) + 1,
+        gradients.length - 1
+      );
+      gsap.to(container, {
+        background: gradients[index],
+        duration: 1,
+        ease: 'sine.inOut',
+      });
+    };
+
+    const handleScroll = () => {
+      requestAnimationFrame(updateBackground);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [gradients]);
+
+  const filteredUsers = useMemo(() => {
+    if (!debouncedSearchTerm) return users;
+    const lowerSearch = debouncedSearchTerm.toLowerCase();
+    return users.filter(
+      (user) =>
+        user.username.toLowerCase().includes(lowerSearch) ||
+        user.displayName.toLowerCase().includes(lowerSearch)
+    );
+  }, [debouncedSearchTerm]);
+
+  // Handle card animations with IntersectionObserver
+  useEffect(() => {
+    const cards = gridRef.current?.querySelectorAll('.user-card');
+    if (!cards) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const card = entry.target;
+            gsap.fromTo(
+              card,
+              {
+                opacity: 0, // Начальная прозрачность
+              },
+              {
+                opacity: 1, // Конечная прозрачность
+                duration: 0.5, // Длительность анимации
+                ease: 'power2.inOut', // Плавная кривая анимации
+              }
+            );
+            observer.unobserve(card); // Отключаем наблюдение после анимации
+          }
+        });
+      },
+      { threshold: 0.3 } // Запускаем анимацию, когда 30% карточки видно
+    );
+
+    cards.forEach((card) => observer.observe(card));
+    return () => cards.forEach((card) => observer.unobserve(card));
+  }, [filteredUsers]);
 
   useLayoutEffect(() => {
     const timer = setTimeout(() => {
@@ -289,42 +550,31 @@ const Treker = () => {
       gsap.fromTo(
         headerRef.current,
         { opacity: 0, y: -50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out'
-        }
+        { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }
       );
     }
   }, []);
 
-  const filteredUsers = useMemo(() => {
-    if (!debouncedSearchTerm) return users;
-    return users.filter(
-      user =>
-        user.username.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-        user.displayName.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
-    );
-  }, [debouncedSearchTerm]);
-
   useLayoutEffect(() => {
-    if (gridRef.current) {
-      gsap.fromTo(
-        '.user-card',
-        { opacity: 0, scale: 0.8 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'power3.out'
+    if (modalOpen && modalRef.current) {
+      modalRef.current.classList.add('active');
+    } else if (modalRef.current) {
+      const handleTransitionEnd = () => {
+        if (!modalOpen) {
+          setSelectedUser(null);
         }
-      );
+      };
+      modalRef.current.classList.remove('active');
+      modalRef.current.addEventListener('transitionend', handleTransitionEnd, { once: true });
+      return () => {
+        if (modalRef.current) {
+          modalRef.current.removeEventListener('transitionend', handleTransitionEnd);
+        }
+      };
     }
-  }, [filteredUsers]);
+  }, [modalOpen]);
 
-  const handleSearch = e => {
+  const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
@@ -332,26 +582,25 @@ const Treker = () => {
     setSearchTerm('');
   };
 
+  const handleCardClick = (user) => {
+    setSelectedUser(user);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   return (
-    <TrekerContainer>
+    <TrekerContainer ref={containerRef}>
       <ContentWrapper>
         <Header ref={headerRef}>Neo-Trek</Header>
         <SearchWrapper>
-          <Search
-            style={{
-              position: 'absolute',
-              left: '1rem',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: '#94a3b8'
-            }}
-            size={24}
-          />
           <SearchInput
             type="text"
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Поиск пользователей..."
+            placeholder="Поиск по имени или username..."
             autoFocus
             aria-label="Поиск пользователей"
           />
@@ -360,13 +609,70 @@ const Treker = () => {
               <X size={20} />
             </ClearButton>
           )}
+          <TwitterLink href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Перейти на X">
+            <XIcon size={24} />
+          </TwitterLink>
         </SearchWrapper>
         <UserGrid ref={gridRef}>
-          {filteredUsers.map(user => (
-            <UserCardComponent key={user.username} user={user} />
+          {filteredUsers.map((user) => (
+            <UserCard
+              key={user.username}
+              className="user-card"
+              onClick={() => handleCardClick(user)}
+            >
+              <UserContent>
+                <AvatarWrapper>
+                  <Avatar src={user.avatar || 'https://via.placeholder.com/72'} alt={`${user.displayName} avatar`} />
+                </AvatarWrapper>
+                <UserInfo>
+                  <Username>{user.username}</Username>
+                  <DisplayName>{user.displayName}</DisplayName>
+                  <Bio>{user.bio}</Bio>
+                  <Followers>{user.followers.toLocaleString()} подписчиков</Followers>
+                  <CreatedAt>Присоединился {formatDate(user.createdAt)}</CreatedAt>
+                </UserInfo>
+              </UserContent>
+            </UserCard>
           ))}
         </UserGrid>
       </ContentWrapper>
+
+      <ModalOverlay ref={modalRef} className={modalOpen ? 'active' : ''}>
+        {selectedUser && (
+          <ModalContent>
+            <ModalHeader>
+              <BackButton onClick={closeModal}>
+                <ArrowLeft size={20} />
+              </BackButton>
+              <ProfileAvatar>
+                <ProfileAvatarImg
+                  src={selectedUser.avatar || 'https://via.placeholder.com/96'}
+                  alt={`${selectedUser.displayName} profile`}
+                />
+              </ProfileAvatar>
+            </ModalHeader>
+            <ProfileContent>
+              <ProfileName>
+                <ProfileDisplayName>{selectedUser.displayName}</ProfileDisplayName>
+                <ProfileUsername>{selectedUser.username}</ProfileUsername>
+              </ProfileName>
+              <ProfileFollowers>{selectedUser.followers.toLocaleString()} подписчиков</ProfileFollowers>
+              <ProfileBio>
+                <ProfileBioTitle>
+                  <User size={16} /> Биография
+                </ProfileBioTitle>
+                <ProfileBioText>{selectedUser.bio}</ProfileBioText>
+              </ProfileBio>
+              <ProfileDate>
+                <ProfileDateIcon>
+                  <Calendar size={18} />
+                </ProfileDateIcon>
+                <ProfileDateText>Присоединился {formatDate(selectedUser.createdAt)}</ProfileDateText>
+              </ProfileDate>
+            </ProfileContent>
+          </ModalContent>
+        )}
+      </ModalOverlay>
     </TrekerContainer>
   );
 };
