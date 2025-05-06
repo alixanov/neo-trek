@@ -44,7 +44,7 @@ const Header = styled.h1`
   font-weight: 800;
   text-align: center;
   margin-bottom: 2rem;
-  background: linear-gradient(45deg, #8b5cf6,rgb(255, 0, 128));
+  background: linear-gradient(45deg, #8b5cf6, #ff0080);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-transform: uppercase;
@@ -156,6 +156,7 @@ const UserCard = styled.div`
     background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.2), transparent 70%);
     opacity: 0;
     transition: opacity 0.4s ease;
+,PQ:1;
   }
   &:hover:before {
     opacity: 1;
@@ -432,13 +433,13 @@ const formatDate = (dateString) => {
   try {
     const date = new Date(dateString);
     if (isNaN(date)) throw new Error('Invalid date');
-    return date.toLocaleDateString('ru-RU', {
+    return date.toLocaleDateString('en-US', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     });
   } catch {
-    return 'Неизвестно';
+    return 'Unknown';
   }
 };
 
@@ -454,9 +455,9 @@ const Treker = () => {
 
   // Gradient backgrounds for scroll effect
   const gradients = [
-    'linear-gradient(135deg, #1e1b4b,rgb(87, 29, 149))', // Matches initial background
-    'linear-gradient(135deg, #2a2a72,rgb(47, 23, 82))', // Navy to cyan
-    'linear-gradient(135deg,rgb(27, 24, 73),rgb(106, 25, 80))', // Matches initial background
+    'linear-gradient(135deg, #1e1b4b, #571d95)', // Matches initial background
+    'linear-gradient(135deg, #2a2a72, #2f1752)', // Navy to cyan
+    'linear-gradient(135deg, #1b1849, #6a1950)', // Matches initial background
   ];
 
   // Set initial background immediately on mount
@@ -519,19 +520,19 @@ const Treker = () => {
             gsap.fromTo(
               card,
               {
-                opacity: 0, // Начальная прозрачность
+                opacity: 0, // Initial opacity
               },
               {
-                opacity: 1, // Конечная прозрачность
-                duration: 0.5, // Длительность анимации
-                ease: 'power2.inOut', // Плавная кривая анимации
+                opacity: 1, // Final opacity
+                duration: 0.5, // Animation duration
+                ease: 'power2.inOut', // Smooth animation curve
               }
             );
-            observer.unobserve(card); // Отключаем наблюдение после анимации
+            observer.unobserve(card); // Stop observing after animation
           }
         });
       },
-      { threshold: 0.3 } // Запускаем анимацию, когда 30% карточки видно
+      { threshold: 0.3 } // Trigger animation when 30% of the card is visible
     );
 
     cards.forEach((card) => observer.observe(card));
@@ -600,16 +601,16 @@ const Treker = () => {
             type="text"
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Поиск по имени или username..."
+            placeholder="Search by name or username..."
             autoFocus
-            aria-label="Поиск пользователей"
+            aria-label="Search users"
           />
           {searchTerm && (
-            <ClearButton onClick={clearSearch} aria-label="Очистить поиск">
+            <ClearButton onClick={clearSearch} aria-label="Clear search">
               <X size={20} />
             </ClearButton>
           )}
-          <TwitterLink href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Перейти на X">
+          <TwitterLink href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Go to X">
             <XIcon size={24} />
           </TwitterLink>
         </SearchWrapper>
@@ -628,8 +629,8 @@ const Treker = () => {
                   <Username>{user.username}</Username>
                   <DisplayName>{user.displayName}</DisplayName>
                   <Bio>{user.bio}</Bio>
-                  <Followers>{user.followers.toLocaleString()} подписчиков</Followers>
-                  <CreatedAt>Присоединился {formatDate(user.createdAt)}</CreatedAt>
+                  <Followers>{user.followers.toLocaleString()} followers</Followers>
+                  <CreatedAt>Joined {formatDate(user.createdAt)}</CreatedAt>
                 </UserInfo>
               </UserContent>
             </UserCard>
@@ -656,10 +657,10 @@ const Treker = () => {
                 <ProfileDisplayName>{selectedUser.displayName}</ProfileDisplayName>
                 <ProfileUsername>{selectedUser.username}</ProfileUsername>
               </ProfileName>
-              <ProfileFollowers>{selectedUser.followers.toLocaleString()} подписчиков</ProfileFollowers>
+              <ProfileFollowers>{selectedUser.followers.toLocaleString()} followers</ProfileFollowers>
               <ProfileBio>
                 <ProfileBioTitle>
-                  <User size={16} /> Биография
+                  <User size={16} /> Biography
                 </ProfileBioTitle>
                 <ProfileBioText>{selectedUser.bio}</ProfileBioText>
               </ProfileBio>
@@ -667,7 +668,7 @@ const Treker = () => {
                 <ProfileDateIcon>
                   <Calendar size={18} />
                 </ProfileDateIcon>
-                <ProfileDateText>Присоединился {formatDate(selectedUser.createdAt)}</ProfileDateText>
+                <ProfileDateText>Joined {formatDate(selectedUser.createdAt)}</ProfileDateText>
               </ProfileDate>
             </ProfileContent>
           </ModalContent>
