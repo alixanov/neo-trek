@@ -1429,11 +1429,7 @@ const Treker = () => {
               transform: "translateY(-50%)",
             }}
           />
-          {searchTerm && (
-            <ClearButton onClick={clearSearch} aria-label="Clear search" theme={theme}>
-              <X size={20} />
-            </ClearButton>
-          )}
+ 
           <div ref={dropdownRef} style={{ position: 'relative' }}>
             <FilterButton
               onClick={toggleDropdown}
