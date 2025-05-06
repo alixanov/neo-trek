@@ -1,5 +1,5 @@
-import React, { useState, useLayoutEffect, useMemo, useEffect, useRef } from 'react';
-import { Search, X, User, Calendar, ArrowLeft } from 'lucide-react';
+import React, { useState, useLayoutEffect, useMemo, useEffect, useRef, useCallback } from 'react';
+import { Search, X, User, Calendar, ArrowLeft, EyeOff, Sun, Moon } from 'lucide-react';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { Bar } from 'react-chartjs-2';
@@ -7,17 +7,53 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import users from '../data/user';
 import XIcon from '@mui/icons-material/X';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
+
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+// Theme definitions
+const themes = {
+  light: {
+    background: 'linear-gradient(135deg, #1e1b4b, #4c1d95)',
+    text: '#ffffff',
+    secondaryText: '#d1d5db',
+    mutedText: '#94a3b8',
+    accent: '#ec4899',
+    highlight: '#facc15',
+    cardBg: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1))',
+    modalBg: 'linear-gradient(135deg, rgba(30, 34, 53, 0.95), rgba(18, 20, 32, 0.95))',
+    inputBg: 'rgba(255, 255, 255, 0.05)',
+    border: 'rgba(255, 255, 255, 0.15)',
+    optionBg: '#12151f',
+  },
+  dark: {
+    background: 'linear-gradient(135deg, #0f172a, #1e293b)',
+    text: '#e2e8f0',
+    secondaryText: '#cbd5e1',
+    mutedText: '#64748b',
+    accent: '#db2777',
+    highlight: '#eab308',
+    cardBg: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(219, 39, 119, 0.1))',
+    modalBg: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9))',
+    inputBg: 'rgba(15, 23, 42, 0.3)',
+    border: 'rgba(255, 255, 255, 0.1)',
+    optionBg: '#1e293b',
+  },
+};
 
 const TrekerContainer = styled.div`
   min-height: 100vh;
   padding: 3rem 1rem;
-  background: linear-gradient(135deg, #1e1b4b, #4c1d95);
-  color: #ffffff;
+  background: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
   font-family: 'Montserrat', sans-serif;
   position: relative;
   overflow: hidden;
+  transition: filter 0.3s ease, background 0.3s ease, color 0.3s ease;
+  &.incognito {
+    filter: brightness(0.7) contrast(0.9);
+    background: linear-gradient(135deg, #12151f, #2a1d3a);
+  }
   @media (min-width: 640px) {
     padding: 3rem 1.5rem;
   }
@@ -66,28 +102,30 @@ const SearchWrapper = styled.div`
   position: relative;
   margin-bottom: 4rem;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
 `;
 
 const SearchInput = styled.input`
-  width: 100%;
+  flex: 1;
+  min-width: 200px;
   padding: 1rem 4rem 1rem 3rem;
   border-radius: 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: ${({ theme }) => theme.inputBg};
+  border: 1px solid ${({ theme }) => theme.border};
+  color: ${({ theme }) => theme.text};
   font-size: 1rem;
   font-weight: 400;
   outline: none;
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
   &:focus {
-    border-color: #ec4899;
-    box-shadow: 0 0 8px rgba(236, 72, 153, 0.4);
+    border-color: ${({ theme }) => theme.accent};
+    box-shadow: 0 0 8px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.4)`};
   }
   &::placeholder {
-    color: #94a3b8;
+    color: ${({ theme }) => theme.mutedText};
   }
 `;
 
@@ -98,11 +136,11 @@ const ClearButton = styled.button`
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: #94a3b8;
+  color: ${({ theme }) => theme.mutedText};
   cursor: pointer;
   transition: color 0.3s ease;
   &:hover {
-    color: #facc15;
+    color: ${({ theme }) => theme.highlight};
   }
 `;
 
@@ -110,15 +148,139 @@ const TwitterLink = styled.a`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
+  background: ${({ theme }) => theme.inputBg};
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
-  color: #94a3b8;
+  color: ${({ theme }) => theme.mutedText};
   transition: all 0.3s ease;
   &:hover {
-    color: #facc15;
-    background: rgba(255, 255, 255, 0.1);
+    color: ${({ theme }) => theme.highlight};
+    background: ${({ theme }) => `rgba(${parseColor(theme.inputBg)}, 0.1)`};
+    transform: scale(1.1);
+  }
+`;
+
+const FilterButton = styled.button`
+  padding: 0.75rem 1rem;
+  border-radius: 2rem;
+  background: linear-gradient(45deg, #8b5cf6, #ec4899);
+  border: 1px solid ${({ theme }) => theme.border};
+  color: ${({ theme }) => theme.text};
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 200px;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  position: relative;
+  &:hover {
+    border-color: ${({ theme }) => theme.highlight};
+    box-shadow: 0 0 10px ${({ theme }) => `rgba(${parseColor(theme.highlight)}, 0.3)`};
+  }
+  &:focus {
+    border-color: ${({ theme }) => theme.accent};
+    box-shadow: 0 0 12px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.5)`};
+  }
+`;
+
+const DropdownMenu = styled.ul`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 200px;
+  background: ${({ theme }) => theme.optionBg};
+  border-radius: 1rem;
+  border: 1px solid ${({ theme }) => theme.border};
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  z-index: 10;
+  margin-top: 0.5rem;
+  backdrop-filter: blur(8px);
+  list-style: none;
+  padding: 0.5rem 0;
+  display: none;
+  &.open {
+    display: block;
+  }
+`;
+
+const DropdownItem = styled.li`
+  padding: 0.75rem 1rem;
+  color: ${({ theme }) => theme.text};
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  &:hover {
+    background: ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
+    color: ${({ theme }) => theme.highlight};
+  }
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+    right: 1rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, ${({ theme }) => theme.accent}, transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  &:hover:after {
+    opacity: 1;
+  }
+`;
+
+const IncognitoButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ theme }) => theme.inputBg};
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid ${({ theme }) => theme.border};
+  color: ${({ theme }) => theme.mutedText};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &.active {
+    background: ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
+    color: ${({ theme }) => theme.accent};
+    border-color: ${({ theme }) => theme.accent};
+  }
+  &:hover {
+    color: ${({ theme }) => theme.highlight};
+    background: ${({ theme }) => `rgba(${parseColor(theme.inputBg)}, 0.1)`};
+    transform: scale(1.1);
+  }
+`;
+
+const DarkModeButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ theme }) => theme.inputBg};
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid ${({ theme }) => theme.border};
+  color: ${({ theme }) => theme.mutedText};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &.active {
+    background: ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
+    color: ${({ theme }) => theme.accent};
+    border-color: ${({ theme }) => theme.accent};
+  }
+  &:hover {
+    color: ${({ theme }) => theme.highlight};
+    background: ${({ theme }) => `rgba(${parseColor(theme.inputBg)}, 0.1)`};
     transform: scale(1.1);
   }
 `;
@@ -137,10 +299,10 @@ const UserGrid = styled.div`
 
 const UserCard = styled.div`
   position: relative;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+  background: ${({ theme }) => theme.cardBg};
   border-radius: 1.5rem;
   padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid ${({ theme }) => theme.border};
   backdrop-filter: blur(10px);
   transition: all 0.4s ease;
   cursor: pointer;
@@ -148,8 +310,8 @@ const UserCard = styled.div`
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   &:hover {
     transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3), 0 0 20px rgba(236, 72, 153, 0.2);
-    border-color: #ec4899;
+    box-shadow: 0 8px 20px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.3)`}, 0 0 20px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
+    border-color: ${({ theme }) => theme.accent};
   }
   &:before {
     content: '';
@@ -158,7 +320,7 @@ const UserCard = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.2), transparent 70%);
+    background: radial-gradient(circle at 20% 20%, ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`}, transparent 70%);
     opacity: 0;
     transition: opacity 0.4s ease;
   }
@@ -192,7 +354,7 @@ const Avatar = styled.img`
   object-fit: cover;
   border: 2px solid transparent;
   background: linear-gradient(45deg, #8b5cf6, #ec4899);
-  box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+  box-shadow: 0 0 10px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.5)`};
 `;
 
 const UserInfo = styled.div`
@@ -202,24 +364,24 @@ const UserInfo = styled.div`
 `;
 
 const Username = styled.h3`
-  color: #ffffff;
+  color: ${({ theme }) => theme.text};
   font-weight: 700;
   font-size: 1.2rem;
   margin: 0;
   transition: color 0.3s ease;
   ${UserCard}:hover & {
-    color: #facc15;
+    color: ${({ theme }) => theme.highlight};
   }
 `;
 
 const DisplayName = styled.p`
-  color: #d1d5db;
+  color: ${({ theme }) => theme.secondaryText};
   font-size: 0.95rem;
   margin: 0;
 `;
 
 const Bio = styled.p`
-  color: #94a3b8;
+  color: ${({ theme }) => theme.mutedText};
   font-size: 0.85rem;
   margin: 0;
   line-height: 1.4;
@@ -231,15 +393,38 @@ const Bio = styled.p`
   -webkit-box-orient: vertical;
 `;
 
+const Hashtags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+`;
+
+const Hashtag = styled.span`
+  background: ${({ theme }) => theme.inputBg};
+  border: 1px solid ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.3)`};
+  border-radius: 1rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.secondaryText};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover {
+    background: ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
+    color: ${({ theme }) => theme.highlight};
+    border-color: ${({ theme }) => theme.highlight};
+  }
+`;
+
 const Followers = styled.p`
-  color: #ec4899;
+  color: ${({ theme }) => theme.accent};
   font-size: 0.9rem;
   font-weight: 500;
   margin: 0;
 `;
 
 const CreatedAt = styled.p`
-  color: #94a3b8;
+  color: ${({ theme }) => theme.mutedText};
   font-size: 0.85rem;
   margin: 0;
 `;
@@ -270,10 +455,10 @@ const ModalContent = styled.div`
   max-width: 36rem;
   max-height: 95vh;
   overflow-y: auto;
-  background: linear-gradient(135deg, rgba(30, 34, 53, 0.95), rgba(18, 20, 32, 0.95));
+  background: ${({ theme }) => theme.modalBg};
   border-radius: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(139, 92, 246, 0.3);
+  border: 1px solid ${({ theme }) => theme.border};
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 30px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.3)`};
   padding: 0;
   position: relative;
   transform: scale(0.85);
@@ -286,11 +471,11 @@ const ModalContent = styled.div`
     width: 10px;
   }
   &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
+    background: ${({ theme }) => theme.inputBg};
     border-radius: 5px;
   }
   &::-webkit-scrollbar-thumb {
-    background: rgba(139, 92, 246, 0.6);
+    background: ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.6)`};
     border-radius: 5px;
   }
 `;
@@ -319,7 +504,7 @@ const BackButton = styled.button`
   left: 1rem;
   background: rgba(0, 0, 0, 0.3);
   border: none;
-  color: #ffffff;
+  color: ${({ theme }) => theme.text};
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
@@ -344,7 +529,7 @@ const ProfileAvatar = styled.div`
   height: 8rem;
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid #12151f;
+  border: 4px solid ${({ theme }) => theme.optionBg};
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 `;
 
@@ -366,32 +551,32 @@ const ProfileName = styled.div`
 `;
 
 const ProfileDisplayName = styled.h2`
-  color: #ffffff;
+  color: ${({ theme }) => theme.text};
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0 0 0.25rem;
 `;
 
 const ProfileUsername = styled.p`
-  color: #ec4899;
+  color: ${({ theme }) => theme.accent};
   font-size: 1.1rem;
   margin: 0;
 `;
 
 const ProfileFollowers = styled.div`
-  background: rgba(255, 255, 255, 0.05);
+  background: ${({ theme }) => theme.inputBg};
   border-radius: 1rem;
   padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.2rem;
-  color: #facc15;
+  color: ${({ theme }) => theme.highlight};
   font-weight: 600;
 `;
 
 const ProfileBio = styled.div`
-  background: rgba(255, 255, 255, 0.05);
+  background: ${({ theme }) => theme.inputBg};
   border-radius: 1rem;
   padding: 1.25rem;
 `;
@@ -400,20 +585,20 @@ const ProfileBioTitle = styled.h3`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #ffffff;
+  color: ${({ theme }) => theme.text};
   font-size: 1rem;
   margin: 0 0 0.75rem;
 `;
 
 const ProfileBioText = styled.p`
-  color: #94a3b8;
+  color: ${({ theme }) => theme.mutedText};
   font-size: 0.95rem;
   line-height: 1.6;
   margin: 0;
 `;
 
 const ProfileDate = styled.div`
-  background: rgba(255, 255, 255, 0.05);
+  background: ${({ theme }) => theme.inputBg};
   border-radius: 1rem;
   padding: 1rem 1.25rem;
   display: flex;
@@ -429,13 +614,89 @@ const ProfileDateIcon = styled.div`
 `;
 
 const ProfileDateText = styled.p`
-  color: #d1d5db;
+  color: ${({ theme }) => theme.secondaryText};
   font-size: 0.9rem;
   margin: 0;
 `;
 
+const PostsContainer = styled.div`
+  background: ${({ theme }) => theme.inputBg};
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const PostsTitle = styled.h3`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: ${({ theme }) => theme.text};
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+`;
+
+const PostCard = styled.div`
+  background: ${({ theme }) => theme.cardBg};
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid ${({ theme }) => theme.border};
+  transition: all 0.3s ease;
+  &:hover {
+    background: ${({ theme }) => `linear-gradient(135deg, rgba(${parseColor(theme.accent)}, 0.1), rgba(${parseColor(theme.accent)}, 0.1))`};
+    border-color: ${({ theme }) => theme.accent};
+    box-shadow: 0 4px 10px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
+  }
+`;
+
+const PostContent = styled.p`
+  color: ${({ theme }) => theme.secondaryText};
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 0.5rem;
+`;
+
+const PostCategory = styled.span`
+  display: inline-block;
+  background: ${({ category }) => {
+    switch (category) {
+      case 'strange':
+        return 'rgba(139, 92, 246, 0.3)';
+      case 'crypto scam warnings':
+        return 'rgba(236, 72, 153, 0.3)';
+      case 'chaos and toxicity':
+        return 'rgba(250, 204, 21, 0.3)';
+      case 'conflicts and controversial':
+        return 'rgba(239, 68, 68, 0.3)';
+      case 'seeking likes and comments':
+        return 'rgba(59, 130, 246, 0.3)';
+      default:
+        return 'rgba(255, 255, 255, 0.2)';
+    }
+  }};
+  color: ${({ theme }) => theme.text};
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  margin-right: 0.5rem;
+`;
+
+const PostDate = styled.span`
+  color: ${({ theme }) => theme.mutedText};
+  font-size: 0.8rem;
+`;
+
+const NoPosts = styled.p`
+  color: ${({ theme }) => theme.mutedText};
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0;
+`;
+
 const ChartContainer = styled.div`
-  background: rgba(255, 255, 255, 0.05);
+  background: ${({ theme }) => theme.inputBg};
   border-radius: 1rem;
   padding: 1.5rem;
   margin-top: 1rem;
@@ -445,10 +706,19 @@ const ChartTitle = styled.h3`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #ffffff;
+  color: ${({ theme }) => theme.text};
   font-size: 1rem;
   margin: 0 0 1rem;
 `;
+
+// Utility to parse hex color to RGB
+const parseColor = (hex) => {
+  if (hex.startsWith('#')) hex = hex.slice(1);
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+  return `${r}, ${g}, ${b}`;
+};
 
 const formatDate = (dateString) => {
   try {
@@ -469,17 +739,36 @@ const Treker = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [filterOption, setFilterOption] = useState('all');
+  const [isIncognito, setIsIncognito] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const headerRef = useRef(null);
   const gridRef = useRef(null);
   const modalRef = useRef(null);
   const containerRef = useRef(null);
+  const postsRef = useRef(null);
   const chartRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  const theme = isDarkMode ? themes.dark : themes.light;
 
   // Gradient backgrounds for scroll effect
   const gradients = [
-    'linear-gradient(135deg, #1e1b4b, #571d95)',
-    'linear-gradient(135deg, #2a2a72, #2f1752)',
-    'linear-gradient(135deg, #1b1849, #6a1950)',
+    theme.background,
+    `linear-gradient(135deg, ${isDarkMode ? '#1e293b' : '#2a2a72'}, ${isDarkMode ? '#334155' : '#2f1752'})`,
+    `linear-gradient(135deg, ${isDarkMode ? '#0f172a' : '#1b1849'}, ${isDarkMode ? '#475569' : '#6a1950'})`,
+  ];
+
+  // Filter options
+  const filterOptions = [
+    { value: 'all', label: 'All Users' },
+    { value: 'latest', label: 'Latest Posts' },
+    { value: 'strange', label: 'Strange Posts' },
+    { value: 'crypto scam warnings', label: 'Crypto Scam Warnings' },
+    { value: 'chaos and toxicity', label: 'Chaos and Toxicity' },
+    { value: 'conflicts and controversial', label: 'Controversial Posts' },
+    { value: 'seeking likes and comments', label: 'Engagement Posts' },
   ];
 
   // Set initial background immediately on mount
@@ -489,7 +778,7 @@ const Treker = () => {
         background: gradients[0],
       });
     }
-  }, []);
+  }, [theme]);
 
   // Handle background gradient change on scroll
   useEffect(() => {
@@ -505,7 +794,7 @@ const Treker = () => {
         gradients.length - 1
       );
       gsap.to(container, {
-        background: gradients[index],
+        background: isIncognito ? 'linear-gradient(135deg, #12151f, #2a1d3a)' : gradients[index],
         duration: 1,
         ease: 'sine.inOut',
       });
@@ -517,17 +806,72 @@ const Treker = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [gradients]);
+  }, [gradients, isIncognito]);
+
+  // Handle dropdown outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Animate dropdown menu
+  useLayoutEffect(() => {
+    if (dropdownRef.current) {
+      const menu = dropdownRef.current.querySelector('ul');
+      const items = menu?.querySelectorAll('li');
+      if (isDropdownOpen) {
+        gsap.fromTo(
+          menu,
+          { opacity: 0, y: -10 },
+          { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }
+        );
+        gsap.fromTo(
+          items,
+          { opacity: 0, x: -10 },
+          { opacity: 1, x: 0, duration: 0.3, ease: 'power2.out', stagger: 0.05 }
+        );
+      }
+    }
+  }, [isDropdownOpen]);
 
   const filteredUsers = useMemo(() => {
-    if (!debouncedSearchTerm) return users;
-    const lowerSearch = debouncedSearchTerm.toLowerCase();
-    return users.filter(
-      (user) =>
-        user.username.toLowerCase().includes(lowerSearch) ||
-        user.displayName.toLowerCase().includes(lowerSearch)
-    );
-  }, [debouncedSearchTerm]);
+    let result = users;
+
+    // Handle search
+    if (debouncedSearchTerm) {
+      const lowerSearch = debouncedSearchTerm.toLowerCase();
+      result = result.filter(
+        (user) =>
+          user.username.toLowerCase().includes(lowerSearch) ||
+          user.displayName.toLowerCase().includes(lowerSearch) ||
+          user.hashtags.some((hashtag) => hashtag.toLowerCase().includes(lowerSearch))
+      );
+    }
+
+    // Handle filtering
+    if (filterOption === 'latest') {
+      result = [...result].sort((a, b) => {
+        const aLatest = a.posts?.length
+          ? Math.max(...a.posts.map((p) => new Date(p.createdAt).getTime()))
+          : 0;
+        const bLatest = b.posts?.length
+          ? Math.max(...b.posts.map((p) => new Date(p.createdAt).getTime()))
+          : 0;
+        return bLatest - aLatest;
+      });
+    } else if (filterOption !== 'all') {
+      result = result.filter((user) =>
+        user.posts?.some((post) => post.category === filterOption)
+      );
+    }
+
+    return result;
+  }, [debouncedSearchTerm, filterOption]);
 
   // Handle card animations with IntersectionObserver
   useEffect(() => {
@@ -541,8 +885,8 @@ const Treker = () => {
             const card = entry.target;
             gsap.fromTo(
               card,
-              { opacity: 0 },
-              { opacity: 1, duration: 0.5, ease: 'power2.inOut' }
+              { opacity: 0, y: 20 },
+              { opacity: 1, y: 0, duration: 0.5, ease: 'power2.inOut' }
             );
             observer.unobserve(card);
           }
@@ -555,13 +899,20 @@ const Treker = () => {
     return () => cards.forEach((card) => observer.unobserve(card));
   }, [filteredUsers]);
 
-  // Animate chart when modal opens
+  // Animate posts and chart when modal opens
   useLayoutEffect(() => {
+    if (modalOpen && postsRef.current) {
+      gsap.fromTo(
+        postsRef.current.children,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.1, delay: 0.3 }
+      );
+    }
     if (modalOpen && chartRef.current) {
       gsap.fromTo(
         chartRef.current,
         { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', delay: 0.3 }
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', delay: 0.5 }
       );
     }
   }, [modalOpen]);
@@ -619,7 +970,28 @@ const Treker = () => {
     setModalOpen(false);
   };
 
-  // Simulated engagement data for the chart
+  const toggleIncognito = () => {
+    setIsIncognito((prev) => !prev);
+  };
+
+  const toggleDarkMode = () => {
+    setIsDarkMode((prev) => !prev);
+  };
+
+  const toggleDropdown = useCallback(() => {
+    setIsDropdownOpen((prev) => !prev);
+  }, []);
+
+  const handleFilterSelect = useCallback((value) => {
+    setFilterOption(value);
+    setIsDropdownOpen(false);
+  }, []);
+
+  const handleHashtagClick = (hashtag) => {
+    console.log(`Clicked hashtag: ${hashtag}`);
+  };
+
+  // Chart data
   const getChartData = (user) => {
     return {
       labels: ['Followers', 'Posts', 'Likes'],
@@ -628,9 +1000,7 @@ const Treker = () => {
           label: 'User Engagement',
           data: [
             user.followers,
-            // Simulate posts (e.g., based on followers)
-            Math.floor(user.followers * (Math.random() * 0.05 + 0.05)),
-            // Simulate likes (e.g., based on followers)
+            user.posts?.length || 0,
             Math.floor(user.followers * (Math.random() * 0.2 + 0.1)),
           ],
           backgroundColor: ['rgba(139, 92, 246, 0.6)', 'rgba(236, 72, 153, 0.6)', 'rgba(250, 204, 21, 0.6)'],
@@ -653,10 +1023,10 @@ const Treker = () => {
         display: false,
       },
       tooltip: {
-        backgroundColor: 'rgba(30, 34, 53, 0.9)',
-        titleColor: '#ffffff',
-        bodyColor: '#d1d5db',
-        borderColor: 'rgba(139, 92, 246, 0.3)',
+        backgroundColor: theme.optionBg,
+        titleColor: theme.text,
+        bodyColor: theme.secondaryText,
+        borderColor: `rgba(${parseColor(theme.accent)}, 0.3)`,
         borderWidth: 1,
       },
     },
@@ -664,10 +1034,10 @@ const Treker = () => {
       y: {
         beginAtZero: true,
         grid: {
-          color: 'rgba(255, 255, 255, 0.1)',
+          color: `rgba(${parseColor(theme.text)}, 0.1)`,
         },
         ticks: {
-          color: '#94a3b8',
+          color: theme.mutedText,
           callback: (value) => value.toLocaleString(),
         },
       },
@@ -676,7 +1046,7 @@ const Treker = () => {
           display: false,
         },
         ticks: {
-          color: '#94a3b8',
+          color: theme.mutedText,
           font: {
             size: 12,
           },
@@ -686,7 +1056,7 @@ const Treker = () => {
   };
 
   return (
-    <TrekerContainer ref={containerRef}>
+    <TrekerContainer ref={containerRef} className={isIncognito ? 'incognito' : ''} theme={theme}>
       <ContentWrapper>
         <Header ref={headerRef}>Neo-Trek</Header>
         <SearchWrapper>
@@ -694,11 +1064,12 @@ const Treker = () => {
             type="text"
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Search by name or username..."
+            placeholder="Search by name, username, or hashtag..."
             autoFocus
             aria-label="Search users"
+            theme={theme}
             sx={{
-              paddingLeft: "30px", // Отступ для иконки
+              paddingLeft: "30px",
               position: "relative",
             }}
           />
@@ -713,11 +1084,51 @@ const Treker = () => {
             }}
           />
           {searchTerm && (
-            <ClearButton onClick={clearSearch} aria-label="Clear search">
+            <ClearButton onClick={clearSearch} aria-label="Clear search" theme={theme}>
               <X size={20} />
             </ClearButton>
           )}
-          <TwitterLink href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Go to X">
+          <div ref={dropdownRef} style={{ position: 'relative' }}>
+            <FilterButton
+              onClick={toggleDropdown}
+              aria-label="Filter users"
+              aria-expanded={isDropdownOpen}
+              theme={theme}
+            >
+              {filterOptions.find((opt) => opt.value === filterOption)?.label}
+              <ArrowLeft size={16} style={{ transform: isDropdownOpen ? 'rotate(90deg)' : 'rotate(-90deg)', transition: 'transform 0.3s ease' }} />
+            </FilterButton>
+            <DropdownMenu className={isDropdownOpen ? 'open' : ''} theme={theme}>
+              {filterOptions.map((option) => (
+                <DropdownItem
+                  key={option.value}
+                  onClick={() => handleFilterSelect(option.value)}
+                  theme={theme}
+                >
+                  {option.label}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </div>
+          <IncognitoButton
+            onClick={toggleIncognito}
+            className={isIncognito ? 'active' : ''}
+            aria-label={isIncognito ? 'Disable incognito mode' : 'Enable incognito mode'}
+            title={isIncognito ? 'Disable Incognito' : 'Enable Incognito'}
+            theme={theme}
+          >
+            <EyeOff size={20} />
+          </IncognitoButton>
+          <DarkModeButton
+            onClick={toggleDarkMode}
+            className={isDarkMode ? 'active' : ''}
+            aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+            theme={theme}
+          >
+            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+          </DarkModeButton>
+          <TwitterLink href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Go to X" theme={theme}>
             <XIcon size={24} />
           </TwitterLink>
         </SearchWrapper>
@@ -728,17 +1139,25 @@ const Treker = () => {
               key={user.username}
               className="user-card"
               onClick={() => handleCardClick(user)}
+              theme={theme}
             >
               <UserContent>
                 <AvatarWrapper>
-                  <Avatar src={user.avatar || 'https://via.placeholder.com/72'} alt={`${user.displayName} avatar`} />
+                  <Avatar src={user.avatar || 'https://via.placeholder.com/72'} alt={`${user.displayName} avatar`} theme={theme} />
                 </AvatarWrapper>
                 <UserInfo>
-                  <Username>{user.username}</Username>
-                  <DisplayName>{user.displayName}</DisplayName>
-                  <Bio>{user.bio}</Bio>
-                  <Followers>{user.followers.toLocaleString()} followers</Followers>
-                  <CreatedAt>Joined {formatDate(user.createdAt)}</CreatedAt>
+                  <Username theme={theme}>{user.username}</Username>
+                  <DisplayName theme={theme}>{user.displayName}</DisplayName>
+                  <Bio theme={theme}>{user.bio}</Bio>
+                  <Hashtags>
+                    {user.hashtags.slice(0, 3).map((hashtag) => (
+                      <Hashtag key={hashtag} onClick={() => handleHashtagClick(hashtag)} theme={theme}>
+                        #{hashtag}
+                      </Hashtag>
+                    ))}
+                  </Hashtags>
+                  <Followers theme={theme}>{user.followers.toLocaleString()} followers</Followers>
+                  <CreatedAt theme={theme}>Joined {formatDate(user.createdAt)}</CreatedAt>
                 </UserInfo>
               </UserContent>
             </UserCard>
@@ -748,12 +1167,12 @@ const Treker = () => {
 
       <ModalOverlay ref={modalRef} className={modalOpen ? 'active' : ''}>
         {selectedUser && (
-          <ModalContent>
+          <ModalContent theme={theme}>
             <ModalHeader>
-              <BackButton onClick={closeModal} aria-label="Close modal">
+              <BackButton onClick={closeModal} aria-label="Close modal" theme={theme}>
                 <ArrowLeft size={20} />
               </BackButton>
-              <ProfileAvatar>
+              <ProfileAvatar theme={theme}>
                 <ProfileAvatarImg
                   src={selectedUser.avatar || 'https://via.placeholder.com/96'}
                   alt={`${selectedUser.displayName} profile`}
@@ -762,24 +1181,44 @@ const Treker = () => {
             </ModalHeader>
             <ProfileContent>
               <ProfileName>
-                <ProfileDisplayName>{selectedUser.displayName}</ProfileDisplayName>
-                <ProfileUsername>{selectedUser.username}</ProfileUsername>
+                <ProfileDisplayName theme={theme}>{selectedUser.displayName}</ProfileDisplayName>
+                <ProfileUsername theme={theme}>{selectedUser.username}</ProfileUsername>
               </ProfileName>
-              <ProfileFollowers>{selectedUser.followers.toLocaleString()} followers</ProfileFollowers>
-              <ProfileBio>
-                <ProfileBioTitle>
+              <ProfileFollowers theme={theme}>{selectedUser.followers.toLocaleString()} followers</ProfileFollowers>
+              <ProfileBio theme={theme}>
+                <ProfileBioTitle theme={theme}>
                   <User size={16} /> Biography
                 </ProfileBioTitle>
-                <ProfileBioText>{selectedUser.bio}</ProfileBioText>
+                <ProfileBioText theme={theme}>{selectedUser.bio}</ProfileBioText>
               </ProfileBio>
-              <ProfileDate>
+              <ProfileDate theme={theme}>
                 <ProfileDateIcon>
                   <Calendar size={18} />
                 </ProfileDateIcon>
-                <ProfileDateText>Joined {formatDate(selectedUser.createdAt)}</ProfileDateText>
+                <ProfileDateText theme={theme}>Joined {formatDate(selectedUser.createdAt)}</ProfileDateText>
               </ProfileDate>
-              <ChartContainer ref={chartRef} aria-label="User engagement chart">
-                <ChartTitle>
+              <PostsContainer ref={postsRef} aria-label="User posts" theme={theme}>
+                <PostsTitle theme={theme}>
+                  <User size={16} /> Posts
+                </PostsTitle>
+                {selectedUser.posts && selectedUser.posts.length > 0 ? (
+                  selectedUser.posts
+                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    .map((post, index) => (
+                      <PostCard key={index} theme={theme}>
+                        <PostContent theme={theme}>{post.content}</PostContent>
+                        <div>
+                          <PostCategory category={post.category} theme={theme}>{post.category}</PostCategory>
+                          <PostDate theme={theme}>{formatDate(post.createdAt)}</PostDate>
+                        </div>
+                      </PostCard>
+                    ))
+                ) : (
+                  <NoPosts theme={theme}>No posts available</NoPosts>
+                )}
+              </PostsContainer>
+              <ChartContainer ref={chartRef} aria-label="User engagement chart" theme={theme}>
+                <ChartTitle theme={theme}>
                   <User size={16} /> Engagement Metrics
                 </ChartTitle>
                 <div style={{ height: '200px' }}>
