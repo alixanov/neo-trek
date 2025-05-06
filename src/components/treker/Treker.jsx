@@ -1,9 +1,14 @@
 import React, { useState, useLayoutEffect, useMemo, useEffect, useRef } from 'react';
-import { Search, X, User, Calendar, ArrowLeft, Twitter } from 'lucide-react';
+import { Search, X, User, Calendar, ArrowLeft } from 'lucide-react';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import users from '../data/user';
 import XIcon from '@mui/icons-material/X';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const TrekerContainer = styled.div`
   min-height: 100vh;
@@ -156,7 +161,6 @@ const UserCard = styled.div`
     background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.2), transparent 70%);
     opacity: 0;
     transition: opacity 0.4s ease;
-,PQ:1;
   }
   &:hover:before {
     opacity: 1;
@@ -247,14 +251,14 @@ const ModalOverlay = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
   &.active {
     opacity: 1;
     visibility: visible;
@@ -263,38 +267,39 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   width: 90%;
-  max-width: 30rem;
-  max-height: 90vh;
+  max-width: 36rem;
+  max-height: 95vh;
   overflow-y: auto;
-  background: linear-gradient(135deg, #1e2235, #121420);
-  border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.2);
+  background: linear-gradient(135deg, rgba(30, 34, 53, 0.95), rgba(18, 20, 32, 0.95));
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(139, 92, 246, 0.3);
   padding: 0;
   position: relative;
-  transform: scale(0.9);
-  transition: transform 0.3s ease;
+  transform: scale(0.85);
+  transition: transform 0.4s ease;
+  backdrop-filter: blur(12px);
   .active & {
     transform: scale(1);
   }
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
   }
   &::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
+    border-radius: 5px;
   }
   &::-webkit-scrollbar-thumb {
-    background: rgba(139, 92, 246, 0.5);
-    border-radius: 4px;
+    background: rgba(139, 92, 246, 0.6);
+    border-radius: 5px;
   }
 `;
 
 const ModalHeader = styled.div`
   position: relative;
-  height: 10rem;
+  height: 12rem;
   background: linear-gradient(135deg, #8b5cf6, #ec4899);
-  border-radius: 1.5rem 1.5rem 0 0;
+  border-radius: 2rem 2rem 0 0;
   overflow: hidden;
   &:before {
     content: '';
@@ -335,12 +340,12 @@ const ProfileAvatar = styled.div`
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 7rem;
-  height: 7rem;
+  width: 8rem;
+  height: 8rem;
   border-radius: 50%;
   overflow: hidden;
   border: 4px solid #12151f;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 `;
 
 const ProfileAvatarImg = styled.img`
@@ -350,7 +355,7 @@ const ProfileAvatarImg = styled.img`
 `;
 
 const ProfileContent = styled.div`
-  padding: 4rem 1.5rem 2rem;
+  padding: 5rem 2rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -362,14 +367,14 @@ const ProfileName = styled.div`
 
 const ProfileDisplayName = styled.h2`
   color: #ffffff;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   margin: 0 0 0.25rem;
 `;
 
 const ProfileUsername = styled.p`
   color: #ec4899;
-  font-size: 1rem;
+  font-size: 1.1rem;
   margin: 0;
 `;
 
@@ -380,7 +385,7 @@ const ProfileFollowers = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #facc15;
   font-weight: 600;
 `;
@@ -429,6 +434,22 @@ const ProfileDateText = styled.p`
   margin: 0;
 `;
 
+const ChartContainer = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+`;
+
+const ChartTitle = styled.h3`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  margin: 0 0 1rem;
+`;
+
 const formatDate = (dateString) => {
   try {
     const date = new Date(dateString);
@@ -452,12 +473,13 @@ const Treker = () => {
   const gridRef = useRef(null);
   const modalRef = useRef(null);
   const containerRef = useRef(null);
+  const chartRef = useRef(null);
 
   // Gradient backgrounds for scroll effect
   const gradients = [
-    'linear-gradient(135deg, #1e1b4b, #571d95)', // Matches initial background
-    'linear-gradient(135deg, #2a2a72, #2f1752)', // Navy to cyan
-    'linear-gradient(135deg, #1b1849, #6a1950)', // Matches initial background
+    'linear-gradient(135deg, #1e1b4b, #571d95)',
+    'linear-gradient(135deg, #2a2a72, #2f1752)',
+    'linear-gradient(135deg, #1b1849, #6a1950)',
   ];
 
   // Set initial background immediately on mount
@@ -519,25 +541,30 @@ const Treker = () => {
             const card = entry.target;
             gsap.fromTo(
               card,
-              {
-                opacity: 0, // Initial opacity
-              },
-              {
-                opacity: 1, // Final opacity
-                duration: 0.5, // Animation duration
-                ease: 'power2.inOut', // Smooth animation curve
-              }
+              { opacity: 0 },
+              { opacity: 1, duration: 0.5, ease: 'power2.inOut' }
             );
-            observer.unobserve(card); // Stop observing after animation
+            observer.unobserve(card);
           }
         });
       },
-      { threshold: 0.3 } // Trigger animation when 30% of the card is visible
+      { threshold: 0.3 }
     );
 
     cards.forEach((card) => observer.observe(card));
     return () => cards.forEach((card) => observer.unobserve(card));
   }, [filteredUsers]);
+
+  // Animate chart when modal opens
+  useLayoutEffect(() => {
+    if (modalOpen && chartRef.current) {
+      gsap.fromTo(
+        chartRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', delay: 0.3 }
+      );
+    }
+  }, [modalOpen]);
 
   useLayoutEffect(() => {
     const timer = setTimeout(() => {
@@ -592,6 +619,72 @@ const Treker = () => {
     setModalOpen(false);
   };
 
+  // Simulated engagement data for the chart
+  const getChartData = (user) => {
+    return {
+      labels: ['Followers', 'Posts', 'Likes'],
+      datasets: [
+        {
+          label: 'User Engagement',
+          data: [
+            user.followers,
+            // Simulate posts (e.g., based on followers)
+            Math.floor(user.followers * (Math.random() * 0.05 + 0.05)),
+            // Simulate likes (e.g., based on followers)
+            Math.floor(user.followers * (Math.random() * 0.2 + 0.1)),
+          ],
+          backgroundColor: ['rgba(139, 92, 246, 0.6)', 'rgba(236, 72, 153, 0.6)', 'rgba(250, 204, 21, 0.6)'],
+          borderColor: ['#8b5cf6', '#ec4899', '#facc15'],
+          borderWidth: 1,
+          borderRadius: 4,
+        },
+      ],
+    };
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: 'rgba(30, 34, 53, 0.9)',
+        titleColor: '#ffffff',
+        bodyColor: '#d1d5db',
+        borderColor: 'rgba(139, 92, 246, 0.3)',
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        ticks: {
+          color: '#94a3b8',
+          callback: (value) => value.toLocaleString(),
+        },
+      },
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          color: '#94a3b8',
+          font: {
+            size: 12,
+          },
+        },
+      },
+    },
+  };
+
   return (
     <TrekerContainer ref={containerRef}>
       <ContentWrapper>
@@ -604,6 +697,20 @@ const Treker = () => {
             placeholder="Search by name or username..."
             autoFocus
             aria-label="Search users"
+            sx={{
+              paddingLeft: "30px", // Отступ для иконки
+              position: "relative",
+            }}
+          />
+          <QueryStatsIcon
+            sx={{
+              color: "#c92ab4",
+              fontSize: "22px",
+              position: "absolute",
+              left: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
           />
           {searchTerm && (
             <ClearButton onClick={clearSearch} aria-label="Clear search">
@@ -614,6 +721,7 @@ const Treker = () => {
             <XIcon size={24} />
           </TwitterLink>
         </SearchWrapper>
+
         <UserGrid ref={gridRef}>
           {filteredUsers.map((user) => (
             <UserCard
@@ -642,7 +750,7 @@ const Treker = () => {
         {selectedUser && (
           <ModalContent>
             <ModalHeader>
-              <BackButton onClick={closeModal}>
+              <BackButton onClick={closeModal} aria-label="Close modal">
                 <ArrowLeft size={20} />
               </BackButton>
               <ProfileAvatar>
@@ -670,6 +778,14 @@ const Treker = () => {
                 </ProfileDateIcon>
                 <ProfileDateText>Joined {formatDate(selectedUser.createdAt)}</ProfileDateText>
               </ProfileDate>
+              <ChartContainer ref={chartRef} aria-label="User engagement chart">
+                <ChartTitle>
+                  <User size={16} /> Engagement Metrics
+                </ChartTitle>
+                <div style={{ height: '200px' }}>
+                  <Bar data={getChartData(selectedUser)} options={chartOptions} />
+                </div>
+              </ChartContainer>
             </ProfileContent>
           </ModalContent>
         )}
