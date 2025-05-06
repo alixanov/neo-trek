@@ -756,8 +756,8 @@ const Treker = () => {
   // Gradient backgrounds for scroll effect
   const gradients = [
     theme.background,
-    `linear-gradient(135deg, ${isDarkMode ? '#1e293b' : '#2a2a72'}, ${isDarkMode ? '#334155' : '#2f1752'})`,
-    `linear-gradient(135deg, ${isDarkMode ? '#0f172a' : '#1b1849'}, ${isDarkMode ? '#475569' : '#6a1950'})`,
+    `linear-gradient(135deg, ${isDarkMode ? '#0d0215' : '#2a2a72'}, ${isDarkMode ? '#050f18' : '#2f1752'})`,
+    `linear-gradient(135deg, ${isDarkMode ? '#250c20' : '#1b1849'}, ${isDarkMode ? '#050f19' : '#6a1950'})`,
   ];
 
   // Filter options
