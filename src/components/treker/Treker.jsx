@@ -41,6 +41,7 @@ const themes = {
   },
 };
 
+// Styled components
 const TrekerContainer = styled.div`
   min-height: 100vh;
   padding: 3rem 1rem;
@@ -60,6 +61,9 @@ const TrekerContainer = styled.div`
   @media (min-width: 1024px) {
     padding: 3rem 2rem;
   }
+  @media (max-width: 639px) {
+    padding: 2rem 0.5rem;
+  }
   &:before {
     content: '';
     position: absolute;
@@ -78,6 +82,10 @@ const ContentWrapper = styled.div`
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  @media (max-width: 639px) {
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
 `;
 
 const Header = styled.h1`
@@ -96,6 +104,10 @@ const Header = styled.h1`
   @media (min-width: 1024px) {
     font-size: 3.5rem;
   }
+  @media (max-width: 639px) {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const SearchWrapper = styled.div`
@@ -105,6 +117,11 @@ const SearchWrapper = styled.div`
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
+  @media (max-width: 639px) {
+    flex-direction: column;
+    margin-bottom: 2rem;
+    gap: 0.5rem;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -127,6 +144,12 @@ const SearchInput = styled.input`
   &::placeholder {
     color: ${({ theme }) => theme.mutedText};
   }
+  @media (max-width: 639px) {
+    min-width: 0;
+    width: 100%;
+    padding: 0.75rem 3rem 0.75rem 2.5rem;
+    font-size: 0.9rem;
+  }
 `;
 
 const ClearButton = styled.button`
@@ -141,6 +164,9 @@ const ClearButton = styled.button`
   transition: color 0.3s ease;
   &:hover {
     color: ${({ theme }) => theme.highlight};
+  }
+  @media (max-width: 639px) {
+    right: 1.5rem;
   }
 `;
 
@@ -158,6 +184,10 @@ const TwitterLink = styled.a`
     color: ${({ theme }) => theme.highlight};
     background: ${({ theme }) => `rgba(${parseColor(theme.inputBg)}, 0.1)`};
     transform: scale(1.1);
+  }
+  @media (max-width: 639px) {
+    width: 2rem;
+    height: 2rem;
   }
 `;
 
@@ -187,6 +217,11 @@ const FilterButton = styled.button`
     border-color: ${({ theme }) => theme.accent};
     box-shadow: 0 0 12px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.5)`};
   }
+  @media (max-width: 639px) {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
 `;
 
 const DropdownMenu = styled.ul`
@@ -207,6 +242,10 @@ const DropdownMenu = styled.ul`
   display: none;
   &.open {
     display: block;
+  }
+  @media (max-width: 639px) {
+    width: 100%;
+    margin-top: 0.25rem;
   }
 `;
 
@@ -235,6 +274,10 @@ const DropdownItem = styled.li`
   &:hover:after {
     opacity: 1;
   }
+  @media (max-width: 639px) {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
 `;
 
 const IncognitoButton = styled.button`
@@ -258,6 +301,10 @@ const IncognitoButton = styled.button`
     color: ${({ theme }) => theme.highlight};
     background: ${({ theme }) => `rgba(${parseColor(theme.inputBg)}, 0.1)`};
     transform: scale(1.1);
+  }
+  @media (max-width: 639px) {
+    width: 2rem;
+    height: 2rem;
   }
 `;
 
@@ -283,6 +330,104 @@ const DarkModeButton = styled.button`
     background: ${({ theme }) => `rgba(${parseColor(theme.inputBg)}, 0.1)`};
     transform: scale(1.1);
   }
+  @media (max-width: 639px) {
+    width: 2rem;
+    height: 2rem;
+  }
+`;
+
+const HashtagsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.2), rgba(157, 23, 77, 0.2));
+  border-radius: 1rem;
+  border: 1px solid ${({ theme }) => theme.border};
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(6px);
+  justify-content: center;
+  @media (max-width: 639px) {
+    padding: 1rem;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.75rem;
+  }
+`;
+
+const HashtagWrapper = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+`;
+
+const HashtagButton = styled.button`
+  background: ${({ theme }) => theme.inputBg};
+  border: 1px solid ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.3)`};
+  border-radius: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  color: ${({ theme }) => theme.secondaryText};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  text-transform: lowercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  &:hover {
+    background: ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
+    color: ${({ theme }) => theme.highlight};
+    border-color: ${({ theme }) => theme.highlight};
+    transform: scale(1.05);
+  }
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.accent};
+    box-shadow: 0 0 8px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.4)`};
+  }
+  @media (max-width: 639px) {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+`;
+
+const PostCount = styled.span`
+  background: ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
+  color: ${({ theme }) => theme.highlight};
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  line-height: 1;
+  @media (max-width: 639px) {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+  }
+`;
+
+const ShowMoreButton = styled.button`
+  background: linear-gradient(45deg, #8b5cf6, #ec4899);
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.text};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  margin: 0.5rem auto;
+  display: block;
+  &:hover {
+    background: linear-gradient(45deg, #a78bfa, #f472b6);
+    transform: scale(1.05);
+  }
+  @media (max-width: 639px) {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
 `;
 
 const UserGrid = styled.div`
@@ -294,6 +439,9 @@ const UserGrid = styled.div`
   }
   @media (min-width: 1024px) {
     grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 639px) {
+    gap: 1rem;
   }
 `;
 
@@ -327,6 +475,10 @@ const UserCard = styled.div`
   &:hover:before {
     opacity: 1;
   }
+  @media (max-width: 639px) {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
 `;
 
 const UserContent = styled.div`
@@ -335,6 +487,9 @@ const UserContent = styled.div`
   align-items: center;
   text-align: center;
   gap: 1rem;
+  @media (max-width: 639px) {
+    gap: 0.75rem;
+  }
 `;
 
 const AvatarWrapper = styled.div`
@@ -344,6 +499,10 @@ const AvatarWrapper = styled.div`
   transition: transform 0.3s ease;
   ${UserCard}:hover & {
     transform: scale(1.1);
+  }
+  @media (max-width: 639px) {
+    width: 4rem;
+    height: 4rem;
   }
 `;
 
@@ -361,6 +520,9 @@ const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  @media (max-width: 639px) {
+    gap: 0.3rem;
+  }
 `;
 
 const Username = styled.h3`
@@ -372,12 +534,18 @@ const Username = styled.h3`
   ${UserCard}:hover & {
     color: ${({ theme }) => theme.highlight};
   }
+  @media (max-width: 639px) {
+    font-size: 1.1rem;
+  }
 `;
 
 const DisplayName = styled.p`
   color: ${({ theme }) => theme.secondaryText};
   font-size: 0.95rem;
   margin: 0;
+  @media (max-width: 639px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const Bio = styled.p`
@@ -391,6 +559,9 @@ const Bio = styled.p`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  @media (max-width: 639px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const Hashtags = styled.div`
@@ -398,13 +569,16 @@ const Hashtags = styled.div`
   flex-wrap: wrap;
   gap: 0.5rem;
   justify-content: center;
+  @media (max-width: 639px) {
+    gap: 0.3rem;
+  }
 `;
 
 const Hashtag = styled.span`
   background: ${({ theme }) => theme.inputBg};
   border: 1px solid ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.3)`};
-  border-radius: 1rem;
-  padding: 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  padding: 0.25rem 0.6rem;
   font-size: 0.8rem;
   color: ${({ theme }) => theme.secondaryText};
   cursor: pointer;
@@ -414,6 +588,10 @@ const Hashtag = styled.span`
     color: ${({ theme }) => theme.highlight};
     border-color: ${({ theme }) => theme.highlight};
   }
+  @media (max-width: 639px) {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+  }
 `;
 
 const Followers = styled.p`
@@ -421,12 +599,18 @@ const Followers = styled.p`
   font-size: 0.9rem;
   font-weight: 500;
   margin: 0;
+  @media (max-width: 639px) {
+    font-size: 0.85rem;
+  }
 `;
 
 const CreatedAt = styled.p`
   color: ${({ theme }) => theme.mutedText};
   font-size: 0.85rem;
   margin: 0;
+  @media (max-width: 639px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const ModalOverlay = styled.div`
@@ -447,6 +631,10 @@ const ModalOverlay = styled.div`
   &.active {
     opacity: 1;
     visibility: visible;
+  }
+  @media (max-width: 639px) {
+    align-items: flex-start;
+    padding-top: 1rem;
   }
 `;
 
@@ -478,6 +666,11 @@ const ModalContent = styled.div`
     background: ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.6)`};
     border-radius: 5px;
   }
+  @media (max-width: 639px) {
+    width: 95%;
+    max-width: 100%;
+    border-radius: 1.5rem;
+  }
 `;
 
 const ModalHeader = styled.div`
@@ -495,6 +688,10 @@ const ModalHeader = styled.div`
     height: 100%;
     background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E") center center;
     opacity: 0.3;
+  }
+  @media (max-width: 639px) {
+    height: 8rem;
+    border-radius: 1.5rem 1.5rem 0 0;
   }
 `;
 
@@ -518,6 +715,12 @@ const BackButton = styled.button`
     background: rgba(0, 0, 0, 0.5);
     transform: scale(1.1);
   }
+  @media (max-width: 639px) {
+    width: 2rem;
+    height: 2rem;
+    top: 0.5rem;
+    left: 0.5rem;
+  }
 `;
 
 const ProfileAvatar = styled.div`
@@ -531,6 +734,12 @@ const ProfileAvatar = styled.div`
   overflow: hidden;
   border: 4px solid ${({ theme }) => theme.optionBg};
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  @media (max-width: 639px) {
+    width: 6rem;
+    height: 6rem;
+    border-width: 3px;
+    bottom: 0.5rem;
+  }
 `;
 
 const ProfileAvatarImg = styled.img`
@@ -544,6 +753,10 @@ const ProfileContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  @media (max-width: 639px) {
+    padding: 3.5rem 1rem 1rem;
+    gap: 1rem;
+  }
 `;
 
 const ProfileName = styled.div`
@@ -555,12 +768,18 @@ const ProfileDisplayName = styled.h2`
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0 0 0.25rem;
+  @media (max-width: 639px) {
+    font-size: 1.4rem;
+  }
 `;
 
 const ProfileUsername = styled.p`
   color: ${({ theme }) => theme.accent};
   font-size: 1.1rem;
   margin: 0;
+  @media (max-width: 639px) {
+    font-size: 1rem;
+  }
 `;
 
 const ProfileFollowers = styled.div`
@@ -573,12 +792,19 @@ const ProfileFollowers = styled.div`
   font-size: 1.2rem;
   color: ${({ theme }) => theme.highlight};
   font-weight: 600;
+  @media (max-width: 639px) {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
 `;
 
 const ProfileBio = styled.div`
   background: ${({ theme }) => theme.inputBg};
   border-radius: 1rem;
   padding: 1.25rem;
+  @media (max-width: 639px) {
+    padding: 1rem;
+  }
 `;
 
 const ProfileBioTitle = styled.h3`
@@ -588,6 +814,10 @@ const ProfileBioTitle = styled.h3`
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
   margin: 0 0 0.75rem;
+  @media (max-width: 639px) {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const ProfileBioText = styled.p`
@@ -595,6 +825,9 @@ const ProfileBioText = styled.p`
   font-size: 0.95rem;
   line-height: 1.6;
   margin: 0;
+  @media (max-width: 639px) {
+    font-size: 0.85rem;
+  }
 `;
 
 const ProfileDate = styled.div`
@@ -604,6 +837,9 @@ const ProfileDate = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  @media (max-width: 639px) {
+    padding: 0.75rem 1rem;
+  }
 `;
 
 const ProfileDateIcon = styled.div`
@@ -617,6 +853,9 @@ const ProfileDateText = styled.p`
   color: ${({ theme }) => theme.secondaryText};
   font-size: 0.9rem;
   margin: 0;
+  @media (max-width: 639px) {
+    font-size: 0.85rem;
+  }
 `;
 
 const PostsContainer = styled.div`
@@ -626,6 +865,10 @@ const PostsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  @media (max-width: 639px) {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
 `;
 
 const PostsTitle = styled.h3`
@@ -635,6 +878,9 @@ const PostsTitle = styled.h3`
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
   margin: 0 0 0.5rem;
+  @media (max-width: 639px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const PostCard = styled.div`
@@ -648,6 +894,9 @@ const PostCard = styled.div`
     border-color: ${({ theme }) => theme.accent};
     box-shadow: 0 4px 10px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
   }
+  @media (max-width: 639px) {
+    padding: 0.75rem;
+  }
 `;
 
 const PostContent = styled.p`
@@ -655,6 +904,9 @@ const PostContent = styled.p`
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 0 0 0.5rem;
+  @media (max-width: 639px) {
+    font-size: 0.85rem;
+  }
 `;
 
 const PostCategory = styled.span`
@@ -681,11 +933,18 @@ const PostCategory = styled.span`
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
   margin-right: 0.5rem;
+  @media (max-width: 639px) {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+  }
 `;
 
 const PostDate = styled.span`
   color: ${({ theme }) => theme.mutedText};
   font-size: 0.8rem;
+  @media (max-width: 639px) {
+    font-size: 0.75rem;
+  }
 `;
 
 const NoPosts = styled.p`
@@ -693,6 +952,9 @@ const NoPosts = styled.p`
   font-size: 0.9rem;
   text-align: center;
   margin: 0;
+  @media (max-width: 639px) {
+    font-size: 0.85rem;
+  }
 `;
 
 const ChartContainer = styled.div`
@@ -700,6 +962,9 @@ const ChartContainer = styled.div`
   border-radius: 1rem;
   padding: 1.5rem;
   margin-top: 1rem;
+  @media (max-width: 639px) {
+    padding: 1rem;
+  }
 `;
 
 const ChartTitle = styled.h3`
@@ -709,6 +974,10 @@ const ChartTitle = styled.h3`
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
   margin: 0 0 1rem;
+  @media (max-width: 639px) {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 // Utility to parse hex color to RGB
@@ -743,6 +1012,8 @@ const Treker = () => {
   const [isIncognito, setIsIncognito] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedHashtag, setSelectedHashtag] = useState(null);
+  const [showMoreHashtags, setShowMoreHashtags] = useState(false);
   const headerRef = useRef(null);
   const gridRef = useRef(null);
   const modalRef = useRef(null);
@@ -750,6 +1021,7 @@ const Treker = () => {
   const postsRef = useRef(null);
   const chartRef = useRef(null);
   const dropdownRef = useRef(null);
+  const hashtagsContainerRef = useRef(null);
 
   const theme = isDarkMode ? themes.dark : themes.light;
 
@@ -770,6 +1042,44 @@ const Treker = () => {
     { value: 'conflicts and controversial', label: 'Controversial Posts' },
     { value: 'seeking likes and comments', label: 'Engagement Posts' },
   ];
+
+  // Collect up to 4 hashtags from each user's hashtags array
+  const allHashtags = useMemo(() => {
+    const hashtagSet = new Set();
+    users.forEach((user) => {
+      if (user.hashtags && Array.isArray(user.hashtags)) {
+        user.hashtags.slice(0, 4).forEach((hashtag) => {
+          const cleanHashtag = hashtag.startsWith('#') ? hashtag.slice(1).toLowerCase() : hashtag.toLowerCase();
+          hashtagSet.add(cleanHashtag);
+        });
+      }
+    });
+    return Array.from(hashtagSet).sort();
+  }, []);
+
+  // Calculate post count for each hashtag
+  const hashtagCounts = useMemo(() => {
+    const counts = {};
+    allHashtags.forEach((hashtag) => {
+      counts[hashtag] = 0;
+      users.forEach((user) => {
+        if (user.posts && Array.isArray(user.posts)) {
+          user.posts.forEach((post) => {
+            if (post.content) {
+              const regex = new RegExp(`#${hashtag}\\b`, 'i');
+              if (regex.test(post.content)) {
+                counts[hashtag]++;
+              }
+            }
+          });
+        }
+      });
+    });
+    return counts;
+  }, [allHashtags, users]);
+
+  // Limit displayed hashtags to 50 unless showMore is true
+  const displayedHashtags = showMoreHashtags ? allHashtags : allHashtags.slice(0, 50);
 
   // Set initial background immediately on mount
   useLayoutEffect(() => {
@@ -839,6 +1149,18 @@ const Treker = () => {
     }
   }, [isDropdownOpen]);
 
+  // Animate hashtags container
+  useLayoutEffect(() => {
+    if (hashtagsContainerRef.current) {
+      const wrappers = hashtagsContainerRef.current.querySelectorAll('.hashtag-wrapper');
+      gsap.fromTo(
+        wrappers,
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.03, delay: 0.3 }
+      );
+    }
+  }, [displayedHashtags]);
+
   const filteredUsers = useMemo(() => {
     let result = users;
 
@@ -853,8 +1175,24 @@ const Treker = () => {
       );
     }
 
+    // Handle hashtag filter
+    if (selectedHashtag) {
+      result = result
+        .map((user) => {
+          const matchingPosts = user.posts?.filter((post) => {
+            const hashtags = post.hashtags || post.content.match(/#[^\s#]+/g) || [];
+            return hashtags.some((hashtag) =>
+              hashtag.toLowerCase().includes(selectedHashtag.toLowerCase())
+            );
+          }).length || 0;
+          return { ...user, matchingPosts };
+        })
+        .filter((user) => user.matchingPosts > 0)
+        .sort((a, b) => b.matchingPosts - a.matchingPosts);
+    }
+
     // Handle filtering
-    if (filterOption === 'latest') {
+    if (filterOption === 'latest' && !selectedHashtag) {
       result = [...result].sort((a, b) => {
         const aLatest = a.posts?.length
           ? Math.max(...a.posts.map((p) => new Date(p.createdAt).getTime()))
@@ -864,14 +1202,14 @@ const Treker = () => {
           : 0;
         return bLatest - aLatest;
       });
-    } else if (filterOption !== 'all') {
+    } else if (filterOption !== 'all' && !selectedHashtag) {
       result = result.filter((user) =>
         user.posts?.some((post) => post.category === filterOption)
       );
     }
 
     return result;
-  }, [debouncedSearchTerm, filterOption]);
+  }, [debouncedSearchTerm, filterOption, selectedHashtag]);
 
   // Handle card animations with IntersectionObserver
   useEffect(() => {
@@ -955,10 +1293,12 @@ const Treker = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
+    setSelectedHashtag(null);
   };
 
   const clearSearch = () => {
     setSearchTerm('');
+    setSelectedHashtag(null);
   };
 
   const handleCardClick = (user) => {
@@ -985,10 +1325,16 @@ const Treker = () => {
   const handleFilterSelect = useCallback((value) => {
     setFilterOption(value);
     setIsDropdownOpen(false);
+    setSelectedHashtag(null);
   }, []);
 
   const handleHashtagClick = (hashtag) => {
-    console.log(`Clicked hashtag: ${hashtag}`);
+    setSelectedHashtag(hashtag);
+    setFilterOption('all');
+  };
+
+  const toggleShowMore = () => {
+    setShowMoreHashtags((prev) => !prev);
   };
 
   // Chart data
@@ -1133,6 +1479,26 @@ const Treker = () => {
           </TwitterLink>
         </SearchWrapper>
 
+        <HashtagsContainer ref={hashtagsContainerRef} theme={theme}>
+          {displayedHashtags.map((hashtag) => (
+            <HashtagWrapper key={hashtag} className="hashtag-wrapper">
+              <HashtagButton
+                onClick={() => handleHashtagClick(hashtag)}
+                theme={theme}
+                aria-label={`Filter by hashtag ${hashtag}`}
+              >
+                #{hashtag}
+              </HashtagButton>
+              <PostCount theme={theme}>{hashtagCounts[hashtag] || 0}</PostCount>
+            </HashtagWrapper>
+          ))}
+        </HashtagsContainer>
+        {allHashtags.length > 50 && (
+          <ShowMoreButton onClick={toggleShowMore} theme={theme}>
+            {showMoreHashtags ? 'Show Less' : 'Show More'}
+          </ShowMoreButton>
+        )}
+
         <UserGrid ref={gridRef}>
           {filteredUsers.map((user) => (
             <UserCard
@@ -1151,8 +1517,8 @@ const Treker = () => {
                   <Bio theme={theme}>{user.bio}</Bio>
                   <Hashtags>
                     {user.hashtags.slice(0, 3).map((hashtag) => (
-                      <Hashtag key={hashtag} onClick={() => handleHashtagClick(hashtag)} theme={theme}>
-                        #{hashtag}
+                      <Hashtag key={hashtag} onClick={() => handleHashtagClick(hashtag.slice(1).toLowerCase())} theme={theme}>
+                        {hashtag}
                       </Hashtag>
                     ))}
                   </Hashtags>
