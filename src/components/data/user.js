@@ -8,7 +8,7 @@ const users = [
     followers: 1200,
     bio: 'Fast news and reactions',
     createdAt: '2023-01-15',
-    avatar: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1883970867215876096/HK4lwY1m_400x400.jpg',
     hashtags: ['#news', '#breakingnews', '#currentevents', '#reactions', '#fastnews', '#trending'],
     posts: [
       { id: uuidv4(), content: 'Alien sighting reported in NYC? Grainy footage circulating, looks like a drone to me. What’s your take? 👽 #trending', createdAt: '2025-04-25', category: 'strange' },
@@ -23,7 +23,7 @@ const users = [
     followers: 500000,
     bio: 'New York news and beyond',
     createdAt: '2010-03-22',
-    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/966372680306868224/60wfGe9e_400x400.jpg',
     hashtags: ['#newyork', '#nypost', '#news', '#citynews', '#usnews', '#journalism', '#headlines'],
     posts: [
       { id: uuidv4(), content: 'NYC mayor’s new policy sparks outrage: “This will ruin the city!” say locals. Agree or disagree? #newyork', createdAt: '2025-04-28', category: 'conflicts and controversial' },
@@ -37,7 +37,7 @@ const users = [
     followers: 300000,
     bio: 'Independent journalism',
     createdAt: '2012-07-10',
-    avatar: 'https://plus.unsplash.com/premium_photo-1689551670902-19b441a6afde?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1500085652309917697/C6VhBAcV_400x400.jpg',
     hashtags: ['#journalism', '#independent', '#news', '#globalnews', '#investigative', '#reporting', '#truth'],
     posts: [
       { id: uuidv4(), content: 'New study claims AI is secretly controlling global markets. Conspiracy or fact? 🧠 #investigative', createdAt: '2025-04-27', category: 'strange' },
@@ -51,7 +51,7 @@ const users = [
     followers: 400000,
     bio: 'Global news every day',
     createdAt: '2011-05-18',
-    avatar: 'https://images.unsplash.com/photo-1664575602554-2087b04935a5?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1573318003554455553/f0lnn5Bv_400x400.jpg',
     hashtags: ['#dailymail', '#globalnews', '#news', '#headlines', '#worldnews', '#updates', '#stories'],
     posts: [
       { id: uuidv4(), content: 'Celebrity’s bizarre diet: “I only eat moonlight!” Fans are confused. Thoughts? 🌙 #headlines', createdAt: '2025-04-29', category: 'strange' },
@@ -65,7 +65,7 @@ const users = [
     followers: 10000000,
     bio: 'Innovator and dreamer',
     createdAt: '2007-06-02',
-    avatar: 'https://images.unsplash.com/photo-1592621385612-4d7129426394?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1919097976594837506/5JJEissI_400x400.jpg',
     hashtags: ['#elonmusk', '#innovation', '#tesla', '#spacex', '#technology', '#future', '#dreamer', '#ai', '#entrepreneur'],
     posts: [
       { id: uuidv4(), content: 'Mars colony will have AI overlords by 2030. Good or bad idea? 🚀 #future', createdAt: '2025-04-26', category: 'strange' },
@@ -80,7 +80,7 @@ const users = [
     followers: 25000,
     bio: 'Technology and media',
     createdAt: '2014-09-12',
-    avatar: 'https://images.unsplash.com/photo-1635488640163-e5f6782cda6e?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1484753905456062467/17Q-Nv6N_400x400.png',
     hashtags: ['#tech', '#media', '#journalism', '#technology', '#startups', '#business', '#innovation'],
     posts: [
       { id: uuidv4(), content: 'Big Tech’s monopoly is out of control. Time to break them up? 🧑‍⚖️ #tech', createdAt: '2025-04-30', category: 'conflicts and controversial' },
@@ -94,7 +94,7 @@ const users = [
     followers: 1500,
     bio: 'Startups and code',
     createdAt: '2018-11-03',
-    avatar: 'https://images.unsplash.com/photo-1586351012965-861624544334?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1906404102390853632/LCwSeSbL_400x400.jpg',
     hashtags: ['#startups', '#coding', '#tech', '#entrepreneurship', '#programming', '#innovation', '#software'],
     posts: [
       { id: uuidv4(), content: 'New coding language claims to “think” like humans. Bug or feature? 🤖 #coding', createdAt: '2025-04-28', category: 'strange' },
@@ -122,7 +122,7 @@ const users = [
     followers: 300,
     bio: 'Sparks of creativity',
     createdAt: '2022-04-19',
-    avatar: 'https://images.unsplash.com/photo-1606776627650-454d6d7bd7bf?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1789484330638561280/t4Js9UFO_400x400.jpg',
     hashtags: ['#creativity', '#art', '#inspiration', '#design', '#imagination', '#creative'],
     posts: [
       { id: uuidv4(), content: 'Painted a canvas that glows under blacklight. It’s alive at night! 🎨 #art', createdAt: '2025-04-27', category: 'strange' },
@@ -136,7 +136,7 @@ const users = [
     followers: 50000,
     bio: 'Entrepreneur and analyst',
     createdAt: '2016-08-30',
-    avatar: 'https://images.unsplash.com/photo-1666932521227-f9d49b5be71d?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1670905743619268609/pYItlWat_400x400.jpg',
     hashtags: ['#entrepreneur', '#business', '#analysis', '#startups', '#finance', '#leadership', '#strategy'],
     posts: [
       { id: uuidv4(), content: 'Crypto scams are out of control! Fake “MarioCoin” is NOT me. Report it! 🚨 #finance', createdAt: '2025-04-30', category: 'crypto scam warnings' },
@@ -150,7 +150,7 @@ const users = [
     followers: 200000,
     bio: 'World news',
     createdAt: '2009-12-14',
-    avatar: 'https://images.unsplash.com/photo-1579493934830-eab45746b51b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/501011686107512834/kfE4YQgP_400x400.png',
     hashtags: ['#worldnews', '#rtnews', '#global', '#news', '#politics', '#international', '#updates'],
     posts: [
       { id: uuidv4(), content: 'Geopolitical tensions rise: West vs. East narrative is propaganda. Agree? #politics', createdAt: '2025-04-28', category: 'conflicts and controversial' },
@@ -164,7 +164,7 @@ const users = [
     followers: 7000,
     bio: 'NFT and blockchain',
     createdAt: '2021-01-07',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1888208671932354560/81LLWPSE_400x400.jpg',
     hashtags: ['#nft', '#blockchain', '#crypto', '#web3', '#digitalart', '#cryptocurrency', '#decentralized'],
     posts: [
       { id: uuidv4(), content: 'Fake NFT drops are everywhere! Verify wallets before minting, people! 🚨 #nft', createdAt: '2025-04-29', category: 'crypto scam warnings' },
@@ -179,7 +179,7 @@ const users = [
     followers: 400,
     bio: 'Crypto enthusiast',
     createdAt: '2022-06-23',
-    avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1778954511349903360/kBSJNkBx_400x400.jpg',
     hashtags: ['#crypto', '#cryptocurrency', '#blockchain', '#bitcoin', '#ethereum', '#defi'],
     posts: [
       { id: uuidv4(), content: '“CryptoMoon” DMs promising 10x gains? It’s a scam! Protect your wallet! 🚨 #crypto', createdAt: '2025-04-27', category: 'crypto scam warnings' },
@@ -193,7 +193,7 @@ const users = [
     followers: 600,
     bio: 'Technology and design',
     createdAt: '2019-10-11',
-    avatar: 'https://images.unsplash.com/photo-1624797432677-6f803a98acb3?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1832731546928713728/6UJh5_Yz_400x400.jpg',
     hashtags: ['#tech', '#design', '#uiux', '#technology', '#innovation', '#productdesign', '#creativity'],
     posts: [
       { id: uuidv4(), content: 'App claims to redesign your face with AI. Looks like a filter gone wrong! 😆 #uiux', createdAt: '2025-04-28', category: 'strange' },
@@ -221,7 +221,7 @@ const users = [
     followers: 1000,
     bio: 'Crypto treasures',
     createdAt: '2021-09-28',
-    avatar: 'https://images.unsplash.com/photo-1578758803946-2c4f6738df87?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png',
     hashtags: ['#crypto', '#cryptocurrency', '#gems', '#blockchain', '#investment', '#defi', '#tokens'],
     posts: [
       { id: uuidv4(), content: '“GemCoin” is a rug pull! Don’t fall for their fake airdrop! 🚨 #crypto', createdAt: '2025-04-29', category: 'crypto scam warnings' },
@@ -235,7 +235,7 @@ const users = [
     followers: 300,
     bio: 'Mysterious observer',
     createdAt: '2022-12-01',
-    avatar: 'https://images.unsplash.com/photo-1550584013-0a844d3b13e2?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1787727074641289216/ifwVxIEJ_400x400.jpg',
     hashtags: ['#mystery', '#observer', '#insights', '#culture', '#trends', '#thoughts'],
     posts: [
       { id: uuidv4(), content: 'Saw a cloaked figure in the fog last night. Real or my mind playing tricks? 🕵️ #mystery', createdAt: '2025-04-27', category: 'strange' },
@@ -249,7 +249,7 @@ const users = [
     followers: 5000,
     bio: 'Memes and finance',
     createdAt: '2020-07-16',
-    avatar: 'https://plus.unsplash.com/premium_photo-1679440415186-66315dcaf04b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1919742995978465280/qomVF-aW_400x400.jpg',
     hashtags: ['#memes', '#finance', '#humor', '#money', '#investing', '#funny', '#markets'],
     posts: [
       { id: uuidv4(), content: 'Stock market crashed, so I bought a pet rock. Best investment yet? 🪨 #humor', createdAt: '2025-04-28', category: 'strange' },
@@ -264,7 +264,7 @@ const users = [
     followers: 800,
     bio: 'Legal insights',
     createdAt: '2018-04-05',
-    avatar: 'https://images.unsplash.com/photo-1737509551345-21577f99bf63?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    avatar: 'https://pbs.twimg.com/profile_images/1760423833507409921/EgjHe3lg_400x400.jpg',
     hashtags: ['#law', '#legal', '#justice', '#insights', '#attorney', '#legalnews', '#rights'],
     posts: [
       { id: uuidv4(), content: 'New law lets you sue your toaster for burning bread. Justice or madness? ⚖️ #legal', createdAt: '2025-04-30', category: 'strange' },
