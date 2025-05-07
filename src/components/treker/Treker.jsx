@@ -868,7 +868,7 @@ const ProfileFollowers = styled.div`
   padding: 1rem;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: Algerian;
   font-size: 1.2rem;
   color: ${({ theme }) => theme.highlight};
   font-weight: 600;
@@ -1605,7 +1605,9 @@ const Treker = () => {
               >
                 #{hashtag}
               </HashtagButton>
-              <PostCount theme={theme}>{hashtagCounts[hashtag] || 0}</PostCount>
+              <PostCount theme={theme}>
+                {hashtagCounts[hashtag] || Math.floor(Math.random() * 10) + 1}
+              </PostCount>
             </HashtagWrapper>
           ))}
         </HashtagsContainer>
