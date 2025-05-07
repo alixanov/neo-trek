@@ -1606,7 +1606,7 @@ const Treker = () => {
                 #{hashtag}
               </HashtagButton>
               <PostCount theme={theme}>
-                {hashtagCounts[hashtag] || Math.floor(Math.random() * 10) + 1}
+                {hashtagCounts[hashtag] || Math.floor(Math.random() * 90) + 1}
               </PostCount>
             </HashtagWrapper>
           ))}
