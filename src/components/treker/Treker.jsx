@@ -49,7 +49,7 @@ const TrekerContainer = styled.div`
   color: ${({ theme }) => theme.text};
   font-family: 'Montserrat', sans-serif;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
   transition: filter 0.3s ease, background 0.3s ease, color 0.3s ease;
   &.incognito {
     filter: brightness(0.7) contrast(0.9);
@@ -62,7 +62,8 @@ const TrekerContainer = styled.div`
     padding: 3rem 2rem;
   }
   @media (max-width: 639px) {
-    padding: 2rem 0.5rem;
+    padding: 1.5rem 0.75rem;
+    font-size: 14px;
   }
   &:before {
     content: '';
@@ -105,8 +106,9 @@ const Header = styled.h1`
     font-size: 3.5rem;
   }
   @media (max-width: 639px) {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
   }
 `;
 
@@ -119,8 +121,20 @@ const SearchWrapper = styled.div`
   gap: 1rem;
   @media (max-width: 639px) {
     flex-direction: column;
-    margin-bottom: 2rem;
-    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    gap: 0.75rem;
+    padding: 0 0.5rem;
+  }
+`;
+
+const ActionBtn = styled.div`
+   display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  @media (max-width: 639px) {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
   }
 `;
 
@@ -147,8 +161,10 @@ const SearchInput = styled.input`
   @media (max-width: 639px) {
     min-width: 0;
     width: 100%;
-    padding: 0.75rem 3rem 0.75rem 2.5rem;
-    font-size: 0.9rem;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 1.5rem;
+    height: 44px;
   }
 `;
 
@@ -166,7 +182,11 @@ const ClearButton = styled.button`
     color: ${({ theme }) => theme.highlight};
   }
   @media (max-width: 639px) {
-    right: 1.5rem;
+    right: 1rem;
+    svg {
+      width: 18px;
+      height: 18px;
+    }
   }
 `;
 
@@ -186,8 +206,12 @@ const TwitterLink = styled.a`
     transform: scale(1.1);
   }
   @media (max-width: 639px) {
-    width: 2rem;
-    height: 2rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 `;
 
@@ -218,9 +242,11 @@ const FilterButton = styled.button`
     box-shadow: 0 0 12px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.5)`};
   }
   @media (max-width: 639px) {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
+    width: 300px;
+    padding: 0.65rem 1rem;
     font-size: 0.85rem;
+    border-radius: 1.5rem;
+    height: 44px;
   }
 `;
 
@@ -246,6 +272,7 @@ const DropdownMenu = styled.ul`
   @media (max-width: 639px) {
     width: 100%;
     margin-top: 0.25rem;
+    border-radius: 0.75rem;
   }
 `;
 
@@ -275,7 +302,7 @@ const DropdownItem = styled.li`
     opacity: 1;
   }
   @media (max-width: 639px) {
-    padding: 0.5rem 0.75rem;
+    padding: 0.6rem 0.75rem;
     font-size: 0.85rem;
   }
 `;
@@ -303,8 +330,12 @@ const IncognitoButton = styled.button`
     transform: scale(1.1);
   }
   @media (max-width: 639px) {
-    width: 2rem;
-    height: 2rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    svg {
+      width: 18px;
+      height: 18px;
+    }
   }
 `;
 
@@ -331,8 +362,12 @@ const DarkModeButton = styled.button`
     transform: scale(1.1);
   }
   @media (max-width: 639px) {
-    width: 2rem;
-    height: 2rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    svg {
+      width: 18px;
+      height: 18px;
+    }
   }
 `;
 
@@ -349,10 +384,11 @@ const HashtagsContainer = styled.div`
   backdrop-filter: blur(6px);
   justify-content: center;
   @media (max-width: 639px) {
-    padding: 1rem;
+    padding: 0.75rem;
     gap: 0.4rem;
-    margin-bottom: 1.5rem;
-    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    justify-content: flex-start;
   }
 `;
 
@@ -372,7 +408,7 @@ const HashtagButton = styled.button`
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 500;
-  text-transform: lowercase;
+  text-transition: lowercase;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -391,6 +427,8 @@ const HashtagButton = styled.button`
   @media (max-width: 639px) {
     padding: 0.3rem 0.6rem;
     font-size: 0.75rem;
+    border-radius: 0.5rem;
+    min-height: 32px;
   }
 `;
 
@@ -403,8 +441,9 @@ const PostCount = styled.span`
   border-radius: 0.5rem;
   line-height: 1;
   @media (max-width: 639px) {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     padding: 0.15rem 0.4rem;
+    border-radius: 0.4rem;
   }
 `;
 
@@ -425,8 +464,10 @@ const ShowMoreButton = styled.button`
     transform: scale(1.05);
   }
   @media (max-width: 639px) {
-    padding: 0.4rem 0.8rem;
+    padding: 0.5rem 1rem;
     font-size: 0.8rem;
+    border-radius: 0.5rem;
+    min-height: 40px;
   }
 `;
 
@@ -441,7 +482,8 @@ const UserGrid = styled.div`
     grid-template-columns: repeat(3, 1fr);
   }
   @media (max-width: 639px) {
-    gap: 1rem;
+    gap: 0.75rem;
+    padding: 0 0.25rem;
   }
 `;
 
@@ -477,7 +519,13 @@ const UserCard = styled.div`
   }
   @media (max-width: 639px) {
     padding: 1rem;
-    border-radius: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: none;
+    &:hover {
+      transform: none;
+      box-shadow: 0 4px 12px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
+    }
   }
 `;
 
@@ -488,7 +536,7 @@ const UserContent = styled.div`
   text-align: center;
   gap: 1rem;
   @media (max-width: 639px) {
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
 `;
 
@@ -501,8 +549,11 @@ const AvatarWrapper = styled.div`
     transform: scale(1.1);
   }
   @media (max-width: 639px) {
-    width: 4rem;
-    height: 4rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    ${UserCard}:hover & {
+      transform: none;
+    }
   }
 `;
 
@@ -514,6 +565,10 @@ const Avatar = styled.img`
   border: 2px solid transparent;
   background: linear-gradient(45deg, #8b5cf6, #ec4899);
   box-shadow: 0 0 10px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.5)`};
+  @media (max-width: 639px) {
+    border-width: 1px;
+    box-shadow: 0 0 6px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.4)`};
+  }
 `;
 
 const UserInfo = styled.div`
@@ -521,7 +576,7 @@ const UserInfo = styled.div`
   flex-direction: column;
   gap: 0.5rem;
   @media (max-width: 639px) {
-    gap: 0.3rem;
+    gap: 0.25rem;
   }
 `;
 
@@ -535,7 +590,10 @@ const Username = styled.h3`
     color: ${({ theme }) => theme.highlight};
   }
   @media (max-width: 639px) {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    ${UserCard}:hover & {
+      color: ${({ theme }) => theme.text};
+    }
   }
 `;
 
@@ -544,7 +602,7 @@ const DisplayName = styled.p`
   font-size: 0.95rem;
   margin: 0;
   @media (max-width: 639px) {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 `;
 
@@ -560,7 +618,9 @@ const Bio = styled.p`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   @media (max-width: 639px) {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    max-height: 2.6rem;
   }
 `;
 
@@ -590,7 +650,9 @@ const Hashtag = styled.span`
   }
   @media (max-width: 639px) {
     padding: 0.2rem 0.5rem;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    border-radius: 0.5rem;
+    min-height: 28px;
   }
 `;
 
@@ -600,7 +662,7 @@ const Followers = styled.p`
   font-weight: 500;
   margin: 0;
   @media (max-width: 639px) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -609,7 +671,7 @@ const CreatedAt = styled.p`
   font-size: 0.85rem;
   margin: 0;
   @media (max-width: 639px) {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 `;
 
@@ -634,7 +696,9 @@ const ModalOverlay = styled.div`
   }
   @media (max-width: 639px) {
     align-items: flex-start;
-    padding-top: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    overflow-y: auto;
   }
 `;
 
@@ -667,9 +731,19 @@ const ModalContent = styled.div`
     border-radius: 5px;
   }
   @media (max-width: 639px) {
-    width: 95%;
-    max-width: 100%;
-    border-radius: 1.5rem;
+    width: 100%;
+    max-width: none;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    transform: none;
+    .active & {
+      transform: none;
+    }
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
   }
 `;
 
@@ -690,8 +764,8 @@ const ModalHeader = styled.div`
     opacity: 0.3;
   }
   @media (max-width: 639px) {
-    height: 8rem;
-    border-radius: 1.5rem 1.5rem 0 0;
+    height: 9rem;
+    border-radius: 0;
   }
 `;
 
@@ -718,8 +792,12 @@ const BackButton = styled.button`
   @media (max-width: 639px) {
     width: 2rem;
     height: 2rem;
-    top: 0.5rem;
-    left: 0.5rem;
+    top: 0.75rem;
+    left: 0.75rem;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 `;
 
@@ -735,10 +813,11 @@ const ProfileAvatar = styled.div`
   border: 4px solid ${({ theme }) => theme.optionBg};
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   @media (max-width: 639px) {
-    width: 6rem;
-    height: 6rem;
-    border-width: 3px;
-    bottom: 0.5rem;
+    width: 5rem;
+    height: 5rem;
+    border-width: 2px;
+    bottom: 0.75rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
 `;
 
@@ -754,8 +833,8 @@ const ProfileContent = styled.div`
   flex-direction: column;
   gap: 1.5rem;
   @media (max-width: 639px) {
-    padding: 3.5rem 1rem 1rem;
-    gap: 1rem;
+    padding: 3rem 1rem 1rem;
+    gap: 0.75rem;
   }
 `;
 
@@ -769,7 +848,8 @@ const ProfileDisplayName = styled.h2`
   font-weight: 700;
   margin: 0 0 0.25rem;
   @media (max-width: 639px) {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
+    margin-bottom: 0.15rem;
   }
 `;
 
@@ -778,7 +858,7 @@ const ProfileUsername = styled.p`
   font-size: 1.1rem;
   margin: 0;
   @media (max-width: 639px) {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 `;
 
@@ -793,8 +873,9 @@ const ProfileFollowers = styled.div`
   color: ${({ theme }) => theme.highlight};
   font-weight: 600;
   @media (max-width: 639px) {
-    font-size: 1rem;
-    padding: 0.75rem;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
   }
 `;
 
@@ -803,7 +884,8 @@ const ProfileBio = styled.div`
   border-radius: 1rem;
   padding: 1.25rem;
   @media (max-width: 639px) {
-    padding: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
   }
 `;
 
@@ -815,8 +897,12 @@ const ProfileBioTitle = styled.h3`
   font-size: 1rem;
   margin: 0 0 0.75rem;
   @media (max-width: 639px) {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-bottom: 0.5rem;
+    svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 `;
 
@@ -826,7 +912,8 @@ const ProfileBioText = styled.p`
   line-height: 1.6;
   margin: 0;
   @media (max-width: 639px) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
   }
 `;
 
@@ -838,7 +925,9 @@ const ProfileDate = styled.div`
   align-items: center;
   gap: 0.75rem;
   @media (max-width: 639px) {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    gap: 0.5rem;
   }
 `;
 
@@ -847,6 +936,12 @@ const ProfileDateIcon = styled.div`
   align-items: center;
   justify-content: center;
   color: #8b5cf6;
+  @media (max-width: 639px) {
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
 `;
 
 const ProfileDateText = styled.p`
@@ -854,7 +949,7 @@ const ProfileDateText = styled.p`
   font-size: 0.9rem;
   margin: 0;
   @media (max-width: 639px) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -866,8 +961,9 @@ const PostsContainer = styled.div`
   flex-direction: column;
   gap: 1rem;
   @media (max-width: 639px) {
-    padding: 1rem;
-    gap: 0.75rem;
+    padding: 0.75rem;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
   }
 `;
 
@@ -879,7 +975,12 @@ const PostsTitle = styled.h3`
   font-size: 1rem;
   margin: 0 0 0.5rem;
   @media (max-width: 639px) {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+    svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 `;
 
@@ -895,7 +996,11 @@ const PostCard = styled.div`
     box-shadow: 0 4px 10px ${({ theme }) => `rgba(${parseColor(theme.accent)}, 0.2)`};
   }
   @media (max-width: 639px) {
-    padding: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    &:hover {
+      box-shadow: none;
+    }
   }
 `;
 
@@ -905,7 +1010,9 @@ const PostContent = styled.p`
   line-height: 1.5;
   margin: 0 0 0.5rem;
   @media (max-width: 639px) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
   }
 `;
 
@@ -934,8 +1041,10 @@ const PostCategory = styled.span`
   border-radius: 1rem;
   margin-right: 0.5rem;
   @media (max-width: 639px) {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+    margin-right: 0.25rem;
   }
 `;
 
@@ -943,7 +1052,7 @@ const PostDate = styled.span`
   color: ${({ theme }) => theme.mutedText};
   font-size: 0.8rem;
   @media (max-width: 639px) {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
 `;
 
@@ -953,7 +1062,7 @@ const NoPosts = styled.p`
   text-align: center;
   margin: 0;
   @media (max-width: 639px) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -963,7 +1072,9 @@ const ChartContainer = styled.div`
   padding: 1.5rem;
   margin-top: 1rem;
   @media (max-width: 639px) {
-    padding: 1rem;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    border-radius: 0.5rem;
   }
 `;
 
@@ -975,8 +1086,12 @@ const ChartTitle = styled.h3`
   font-size: 1rem;
   margin: 0 0 1rem;
   @media (max-width: 639px) {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-bottom: 0.5rem;
+    svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 `;
 
@@ -1427,9 +1542,12 @@ const Treker = () => {
               left: "10px",
               top: "50%",
               transform: "translateY(-50%)",
+              '@media (max-width: 639px)': {
+                display: 'none',
+              },
             }}
           />
- 
+
           <div ref={dropdownRef} style={{ position: 'relative' }}>
             <FilterButton
               onClick={toggleDropdown}
@@ -1452,27 +1570,29 @@ const Treker = () => {
               ))}
             </DropdownMenu>
           </div>
-          <IncognitoButton
-            onClick={toggleIncognito}
-            className={isIncognito ? 'active' : ''}
-            aria-label={isIncognito ? 'Disable incognito mode' : 'Enable incognito mode'}
-            title={isIncognito ? 'Disable Incognito' : 'Enable Incognito'}
-            theme={theme}
-          >
-            <EyeOff size={20} />
-          </IncognitoButton>
-          <DarkModeButton
-            onClick={toggleDarkMode}
-            className={isDarkMode ? 'active' : ''}
-            aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-            title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
-            theme={theme}
-          >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </DarkModeButton>
-          <TwitterLink href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Go to X" theme={theme}>
-            <XIcon size={24} />
-          </TwitterLink>
+          <ActionBtn>
+            <IncognitoButton
+              onClick={toggleIncognito}
+              className={isIncognito ? 'active' : ''}
+              aria-label={isIncognito ? 'Disable incognito mode' : 'Enable incognito mode'}
+              title={isIncognito ? 'Disable Incognito' : 'Enable Incognito'}
+              theme={theme}
+            >
+              <EyeOff size={20} />
+            </IncognitoButton>
+            <DarkModeButton
+              onClick={toggleDarkMode}
+              className={isDarkMode ? 'active' : ''}
+              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+              theme={theme}
+            >
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </DarkModeButton>
+            <TwitterLink href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Go to X" theme={theme}>
+              <XIcon size={24} />
+            </TwitterLink>
+          </ActionBtn>
         </SearchWrapper>
 
         <HashtagsContainer ref={hashtagsContainerRef} theme={theme}>
