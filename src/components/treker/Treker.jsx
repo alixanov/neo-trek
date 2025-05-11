@@ -1519,7 +1519,7 @@ const Treker = () => {
   return (
     <TrekerContainer ref={containerRef} className={isIncognito ? 'incognito' : ''} theme={theme}>
       <ContentWrapper>
-        <Header ref={headerRef}>Neo-Trek</Header>
+        <Header ref={headerRef}>ThreadSpy</Header>
         <SearchWrapper>
           <SearchInput
             type="text"
@@ -1589,7 +1589,7 @@ const Treker = () => {
             >
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
             </DarkModeButton>
-            <TwitterLink href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Go to X" theme={theme}>
+            <TwitterLink href="https://x.com/threads_spy" target="_blank" rel="noopener noreferrer" aria-label="Go to X" theme={theme}>
               <XIcon size={24} />
             </TwitterLink>
           </ActionBtn>
